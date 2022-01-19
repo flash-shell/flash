@@ -5,7 +5,7 @@
  *
  *    Description: Main executable of flash shell. 
  *
- *        Version:  1.0
+ *        Version:  0.1
  *        Created:  19/01/22 22:58:13
  *       Revision:  none
  *       Compiler:  gcc
@@ -26,8 +26,17 @@ int main(void) {
         char USERNAME[] = "user";
         char COMPUTER[] = "comp";
         char input[512];
+        char *p;
+
         printf("%s@%s$ ", USERNAME, COMPUTER);
-        scanf("%s", input);
+        fgets(input, 512, stdin);
+
+        // This if statement here checks to see if the last character in the buffer "input"
+        // is the newline character, and if it is it then removes the character, allowing
+        // for comparisons.
+        if ((p = strchr(input, '\n')) != NULL)
+            *p = '\0';
+
         if (strcmp(input, "exit") == 0) cont = false;
     }
     return 0;
