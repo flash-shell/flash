@@ -46,3 +46,4 @@ Click on the hyperlinks below to access whatever resource you may need.
 
 [main shell pdf](https://github.com/AngusLogan02/flash/blob/master/myplace-pdfs/SimpleShell.pdf)\
 [main shell testing pdf](https://github.com/AngusLogan02/flash/blob/master/myplace-pdfs/SimpleShellTests.pdf)
+[trello](https://trello.com/b/0BASllzp/flash-board)
