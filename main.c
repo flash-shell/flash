@@ -19,16 +19,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 int main(void) {
     bool cont = true;
     while (cont == true) {
-        char USERNAME[] = "user";
-        char COMPUTER[] = "comp";
+        char USERNAME[512];
+        USERNAME[511] = '\0';
+        char HOSTNAME[512];
+	HOSTNAME[511] = '\0';
         char input[512];
         char *p;
 
-        printf("%s@%s$ ", USERNAME, COMPUTER);
+        getlogin_r(USERNAME, 511);
+        gethostname(HOSTNAME, 511);
+
+        printf("%s@%s$ ", USERNAME, HOSTNAME);
         fgets(input, 512, stdin);
 
         // This if statement here checks to see if the last character in the buffer "input"
