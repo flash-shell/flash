@@ -43,7 +43,8 @@ int main(void) {
         if ((p = strchr(input, '\n')) != NULL)
             *p = '\0';
 
-        if (strcmp(input, "exit") == 0) cont = false;
+        if (strcmp(input, "exit") == 0)
+			cont = false;
     }
     return 0;
 }
