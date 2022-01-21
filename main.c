@@ -38,7 +38,6 @@ int main(void) {
             printf("\n");
             exit(0);
         }
-            exit(0);
 
         // This if statement here checks to see if the last character in the buffer "input"
         // is the newline character, and if it is it then removes the character, allowing
@@ -47,7 +46,7 @@ int main(void) {
             *p = '\0';
 
         if (strcmp(input, "exit") == 0)
-			exit(0);
+	    exit(0);
     }
     return 0;
 }
