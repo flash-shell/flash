@@ -24,17 +24,16 @@
 int main(void) {
     bool cont = true;
     while (cont == true) {
-        const char delims[] = " \t|><&;";
-        char *token[256];
-        int i = 0;
-        int tokenCount = 0;
-
         char USERNAME[512];
-        USERNAME[511] = '\0';
         char HOSTNAME[512];
-        HOSTNAME[511] = '\0';
         char input[512];
         char *p;
+        const char delims[] = " \t|><&;";
+        char *token[256];
+        int tokenCount = 0;
+
+        USERNAME[511] = '\0';
+        HOSTNAME[511] = '\0';
 
         getlogin_r(USERNAME, 511);
         gethostname(HOSTNAME, 511);
@@ -43,20 +42,19 @@ int main(void) {
 
         // sizeof input is used rather than a hard-coded variable, for good practice.
         if(fgets(input, sizeof input, stdin)) {
-            // if last char in buffer is newline, replace it with end of line to allow for comparisons
+            // If last char in buffer is newline, replace it with end of line to allow for comparisons
             if ((p = strchr(input, '\n')) != NULL)
                 *p = '\0';
-            token[i] = strtok(input, delims);
+            token[tokenCount] = strtok(input, delims);
 
-            while(token[i] != NULL) {
-                i++;
+            while(token[tokenCount] != NULL) {
+                tokenCount++;
                 /*
                  *  Here, "NULL" is passed as the first arg instead of the input, as strtok() has an
                  *  internal state (static pointer) which remembers the last input.
                  */
-                token[i] = strtok(NULL, delims); 
+                token[tokenCount] = strtok(NULL, delims); 
             }
-            tokenCount = i;
         }
 
         for (int i = 0; i < tokenCount; i++) {
