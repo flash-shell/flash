@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include "prompt.h"
 #include "tokenise.h"
+#include "command_handler.h"
 
 int main(void) {
     while (true) {
@@ -29,33 +30,8 @@ int main(void) {
         int tokenCount = 0;
 
         display_prompt();
-
         tokenise(token, &tokenCount);
-
-        // // sizeof input is used rather than a hard-coded variable, for good practice.
-        // if(fgets(input, sizeof input, stdin) != NULL) {
-        //     // If last char in buffer is newline, replace it with end of line to allow for comparisons
-        //     if ((p = strchr(input, '\n')) != NULL)
-        //         *p = '\0';
-        //     token[tokenCount] = strtok(input, delims);
-
-        //     while(token[tokenCount] != NULL) {
-        //         tokenCount++;
-        //         /*
-        //          *  Here, "NULL" is passed as the first arg instead of the input, as strtok() has an
-        //          *  internal state (static pointer) which remembers the last input.
-        //          */
-        //         token[tokenCount] = strtok(NULL, delims); 
-        //     }
-        // } else {
-        //     printf("\n");
-        //     exit(0);
-        // }
-
-        for (int i = 0; i < tokenCount; i++) {
-            if (strcmp(token[i], "exit") == 0)
-                exit(0);
-        }
+        handle_commands(token, tokenCount);
     }
     return 0;
 }

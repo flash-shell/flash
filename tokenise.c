@@ -21,7 +21,7 @@ void tokenise(char **token, int *tokenCount) {
              *  Here, "NULL" is passed as the first arg instead of the input, as strtok() has an
              *  internal state (static pointer) which remembers the last input.
              */
-            token[*tokenCount] = strtok(NULL, delims); 
+            token[*tokenCount] = strtok(NULL, delims);
         }
     } else {
         printf("\n");
