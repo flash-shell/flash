@@ -22,8 +22,7 @@
 #include <unistd.h>
 
 int main(void) {
-    bool cont = true;
-    while (cont == true) {
+    while (true) {
         char USERNAME[512];
         USERNAME[511] = '\0';
         char HOSTNAME[512];
@@ -35,7 +34,11 @@ int main(void) {
         gethostname(HOSTNAME, 511);
 
         printf("%s@%s$ ", USERNAME, HOSTNAME);
-        fgets(input, 512, stdin);
+        if (fgets(input, 512, stdin) == NULL) {
+            printf("\n");
+            exit(0);
+        }
+            exit(0);
 
         // This if statement here checks to see if the last character in the buffer "input"
         // is the newline character, and if it is it then removes the character, allowing
@@ -44,7 +47,7 @@ int main(void) {
             *p = '\0';
 
         if (strcmp(input, "exit") == 0)
-			cont = false;
+			exit(0);
     }
     return 0;
 }
