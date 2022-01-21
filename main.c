@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  main.c
+ *
+ *    Description: Main executable of flash shell. 
+ *
+ *        Version:  0.1
+ *        Created:  19/01/22 22:58:13
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Angus Logan
+ *   Organization:  Best group in CS210 :sunglasses:
+ *
+ * =====================================================================================
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
