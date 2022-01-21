@@ -26,7 +26,7 @@ int main(void) {
         char USERNAME[512];
         USERNAME[511] = '\0';
         char HOSTNAME[512];
-	HOSTNAME[511] = '\0';
+	    HOSTNAME[511] = '\0';
         char input[512];
         char *p;
 
@@ -46,7 +46,7 @@ int main(void) {
             *p = '\0';
 
         if (strcmp(input, "exit") == 0)
-	    exit(0);
+	        exit(0);
     }
     return 0;
 }
