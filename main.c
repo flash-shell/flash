@@ -25,15 +25,12 @@
 
 int main(void) {
     while (true) {
-        char input[512];
-        char *p;
-        const char delims[] = " \t|><&;";
         char *token[256];
         int tokenCount = 0;
 
         display_prompt();
 
-        tokenise(*token, tokenCount);
+        tokenise(token, &tokenCount);
 
         // // sizeof input is used rather than a hard-coded variable, for good practice.
         // if(fgets(input, sizeof input, stdin) != NULL) {

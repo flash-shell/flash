@@ -1,1 +1,1 @@
-void tokenise(char token[], int tokenCount);
+void tokenise(char **token, int *tokenCount);

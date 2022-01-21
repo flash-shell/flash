@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void tokenise(char *token, int tokenCount) {
+void tokenise(char **token, int *tokenCount) {
     char input[512];
     char *p;
     const char delims[] = " \t|><&;";
@@ -13,15 +13,15 @@ void tokenise(char *token, int tokenCount) {
         // If last char in buffer is newline, replace it with end of line to allow for comparisons
         if ((p = strchr(input, '\n')) != NULL)
             *p = '\0';
-        token[tokenCount] = strtok(input, delims);
+        token[*tokenCount] = strtok(input, delims);
 
-        while(token[tokenCount] != NULL) {
-            tokenCount++;
+        while(token[*tokenCount] != NULL) {
+            (*tokenCount)++;
             /*
              *  Here, "NULL" is passed as the first arg instead of the input, as strtok() has an
              *  internal state (static pointer) which remembers the last input.
              */
-            token[tokenCount] = strtok(NULL, delims); 
+            token[*tokenCount] = strtok(NULL, delims); 
         }
     } else {
         printf("\n");
