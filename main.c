@@ -37,7 +37,17 @@ int main(void) {
         getlogin_r(USERNAME, 511);
         gethostname(HOSTNAME, 511);
 
-        printf("%s@%s$ ", USERNAME, HOSTNAME);
+        printf("\033[0;32m");
+        printf("%s", USERNAME);
+
+        printf("\033[0;36m");
+        printf("@");
+
+        printf("\033[0;32m");
+        printf("%s", HOSTNAME);
+
+        printf("\033[0m");
+        printf(" $ ");
 
         // sizeof input is used rather than a hard-coded variable, for good practice.
         if(fgets(input, sizeof input, stdin) != NULL) {
