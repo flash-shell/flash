@@ -30,7 +30,7 @@ int main(void) {
         int tokenCount = 0;
 
         display_prompt();
-        tokenise(token, &tokenCount);
+        break_to_command(token, &tokenCount);
         handle_commands(token, tokenCount);
     }
     return 0;

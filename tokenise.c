@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 
-void tokenise(char **token, int *tokenCount) {
+void break_to_command(char **token, int *tokenCount) {
     char input[512];
     char *p;
-    const char delims[] = " \t|><&;";
+    const char delims[] = "\t|><&;";
 
     // sizeof input is used rather than a hard-coded variable, for good practice.
     if(fgets(input, sizeof input, stdin) != NULL) {
@@ -27,4 +27,15 @@ void tokenise(char **token, int *tokenCount) {
         printf("\n");
         exit(0);
     }
+}
+
+void break_to_arg(char **arg, int *argCount, char *input) {
+    const char delim[] = " ";
+    arg[*argCount] = strtok(input, delim);
+
+    while(arg[*argCount] != NULL) {
+        (*argCount)++;
+        arg[*argCount] = strtok(NULL, delim);
+    }
+    arg[(*argCount)+1] = NULL;
 }
