@@ -26,7 +26,7 @@
 
 int main(void) {
     while (true) {
-        char *token[256];
+        char *token[512];
         int tokenCount = 0;
 
         display_prompt();
