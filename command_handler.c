@@ -20,7 +20,7 @@ void handle_commands(char **token, int no_commands) {
         }
         else {
             // child process
-            char *arg[16];
+            char *arg[512];
             int argCount = 0;
             break_to_arg(arg, &argCount, token[i]);
 
