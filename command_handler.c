@@ -21,9 +21,11 @@ void handle_commands(char **token, int no_commands) {
         } else {
             // child process
             char *arg[512];
+            //char *test[512] = {"git", "status", "\0"};
             int argCount = 0;
             fflush(stdout);
             break_to_arg(arg, &argCount, token[i]);
+            fflush(stdout);
             execvp(arg[0], arg);
             _exit(EXIT_FAILURE);   // exec never returns
         }

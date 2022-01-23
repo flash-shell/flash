@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stddef.h>
 
 void break_to_command(char **token, int *tokenCount) {
     char input[512];
@@ -42,19 +43,36 @@ void break_to_arg(char **arg, int *argCount, char *input) {
     arg[(*argCount)+1] = NULL;
 
     int quote = '"';
-    for(int i = 0; i < *argCount; i++) {
+    int start_at = 0;
+    int one_word = 0;
+
+    for (int i = 0; i < *argCount; i++) {
         if(strchr(arg[i], quote) != NULL) {
-            int start = i;
-            for(int j = (start + 1); j < *argCount; j++) {
-                if(strchr(arg[j], quote) != NULL){
-                    strcat(arg[start], arg[j]);
-                    printf("%s\n", arg[start]);
-                    break;
-                }
-                strcat(arg[start], arg[j]);
-            }
-            printf("%s\n", arg[start]);
+            start_at = i;
+            break;
         }
-        break;
+    }
+
+    if (start_at > 0) {
+        for (int i = start_at; i < *argCount; i++) {
+            if(strchr(arg[i], quote) != NULL) {
+                int start = i;
+                for(int j = (start + 1); j < *argCount; j++) {
+                    if(strchr(arg[j], quote) != NULL){
+                        one_word = 1;
+                        sprintf(arg[start], "%s %s", arg[start], arg[j]);
+                        break;
+                    }
+                    sprintf(arg[start], "%s %s", arg[start], arg[j]);
+                }
+                if (one_word != 1) {
+                    // tbd
+                } else {
+                    //tbd
+                }
+            }
+            break;
+        }
+        arg[start_at + 1] = '\0';
     }
 }
