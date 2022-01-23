@@ -30,24 +30,24 @@ void break_to_command(char **token, int *tokenCount) {
     }
 }
 
-void break_to_arg(char **arg, int *argCount, char *input) {
+void break_to_arg(char **args, int *argCount, char *input) {
     const char delim[] = " ";
     char displaystring[512];
-    arg[*argCount] = strtok(input, delim);
+    args[*argCount] = strtok(input, delim);
 
-    while(arg[*argCount] != NULL) {
+    while(args[*argCount] != NULL) {
         (*argCount)++;
-        arg[*argCount] = strtok(NULL, delim);
+        args[*argCount] = strtok(NULL, delim);
     }
 
-    arg[(*argCount)+1] = NULL;
+    args[(*argCount)+1] = NULL;
 
     int quote = '"';
     int start_at = 0;
     int one_word = 0;
 
     for (int i = 0; i < *argCount; i++) {
-        if(strchr(arg[i], quote) != NULL) {
+        if(strchr(args[i], quote) != NULL) {
             start_at = i;
             break;
         }
@@ -55,15 +55,15 @@ void break_to_arg(char **arg, int *argCount, char *input) {
 
     if (start_at > 0) {
         for (int i = start_at; i < *argCount; i++) {
-            if(strchr(arg[i], quote) != NULL) {
+            if(strchr(args[i], quote) != NULL) {
                 int start = i;
                 for(int j = (start + 1); j < *argCount; j++) {
-                    if(strchr(arg[j], quote) != NULL){
+                    if(strchr(args[j], quote) != NULL){
                         one_word = 1;
-                        sprintf(arg[start], "%s %s", arg[start], arg[j]);
+                        sprintf(args[start], "%s %s", args[start], args[j]);
                         break;
                     }
-                    sprintf(arg[start], "%s %s", arg[start], arg[j]);
+                    sprintf(args[start], "%s %s", args[start], args[j]);
                 }
                 if (one_word != 1) {
                     // tbd
@@ -73,6 +73,6 @@ void break_to_arg(char **arg, int *argCount, char *input) {
             }
             break;
         }
-        arg[start_at + 1] = '\0';
+        args[start_at + 1] = '\0';
     }
 }
