@@ -32,7 +32,6 @@ void break_to_command(char **token, int *tokenCount) {
 
 void break_to_arg(char **args, int *argCount, char *input) {
     const char delim[] = " ";
-    char displaystring[512];
     args[*argCount] = strtok(input, delim);
 
     while(args[*argCount] != NULL) {
@@ -43,36 +42,35 @@ void break_to_arg(char **args, int *argCount, char *input) {
     args[(*argCount)+1] = NULL;
 
     int quote = '"';
-    int start_at = 0;
-    int one_word = 0;
+    int quote_index = first_quote_occurence(args, argCount, quote);
 
-    for (int i = 0; i < *argCount; i++) {
-        if(strchr(args[i], quote) != NULL) {
-            start_at = i;
-            break;
-        }
-    }
-
-    if (start_at > 0) {
-        for (int i = start_at; i < *argCount; i++) {
+    if (quote_index > 0) {
+        for (int i = quote_index; i < *argCount; i++) {
             if(strchr(args[i], quote) != NULL) {
                 int start = i;
                 for(int j = (start + 1); j < *argCount; j++) {
                     if(strchr(args[j], quote) != NULL){
-                        one_word = 1;
                         sprintf(args[start], "%s %s", args[start], args[j]);
                         break;
                     }
                     sprintf(args[start], "%s %s", args[start], args[j]);
                 }
-                if (one_word != 1) {
-                    // tbd
-                } else {
-                    //tbd
-                }
             }
             break;
         }
-        args[start_at + 1] = '\0';
+        args[quote_index + 1] = '\0';
     }
+}
+
+int first_quote_occurence(char **args, int *argCount, int quote) {
+    int index = 0;
+
+    for (int i = 0; i < *argCount; i++) {
+        if(strchr(args[i], quote) != NULL) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
 }
