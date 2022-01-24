@@ -15,7 +15,13 @@ void handle_commands(char **token, int no_commands) {
         if (child_pid == -1) {
             printf("Error. Failed to fork.");
         } else if (child_pid > 0) {
+            // parent process
             int status;
+            /* 
+             *  waitpid waits for a child_pid to finish executing
+             *  necessary as without it the parent process would
+             *  continue executing which could cause issues
+             */
             waitpid(child_pid, &status, 0);
         } else {
             // child process
@@ -27,8 +33,7 @@ void handle_commands(char **token, int no_commands) {
                 fprintf(stderr, "%s: Command not found\n", args[0]);
             }   
 
-            fflush(stdout);
-            _exit(EXIT_FAILURE);   // exec never returns
+            _exit(EXIT_FAILURE);
         }
     }
 }

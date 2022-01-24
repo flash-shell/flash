@@ -52,7 +52,8 @@ void break_to_arg(char **args, int *argCount, char *input) {
                 for(int j = (start + 1); j < *argCount; j++) {
                     memcpy(word, args[start], strlen(args[start]));
                     if(strchr(args[j], quote) != NULL){
-                        sprintf(args[start], "%s %s", word, args[j]);
+                        // sets args[start] to (args[start] + " " + args[j])
+                        sprintf(args[start], "%s %s", args[start], args[j]);
                         break;
                     }
                     sprintf(args[start], "%s %s", word, args[j]);
