@@ -32,6 +32,7 @@ void break_to_command(char **token, int *tokenCount) {
 
 void break_to_arg(char **args, int *argCount, char *input) {
     const char delim[] = " ";
+    char word[64]; 
     args[*argCount] = strtok(input, delim);
 
     while(args[*argCount] != NULL) {
@@ -49,11 +50,12 @@ void break_to_arg(char **args, int *argCount, char *input) {
             if(strchr(args[i], quote) != NULL) {
                 int start = i;
                 for(int j = (start + 1); j < *argCount; j++) {
+                    memcpy(word, args[start], strlen(args[start]));
                     if(strchr(args[j], quote) != NULL){
-                        sprintf(args[start], "%s %s", args[start], args[j]);
+                        sprintf(args[start], "%s %s", word, args[j]);
                         break;
                     }
-                    sprintf(args[start], "%s %s", args[start], args[j]);
+                    sprintf(args[start], "%s %s", word, args[j]);
                 }
             }
             break;
