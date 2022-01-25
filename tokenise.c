@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stddef.h>
 
-void tokenise(char **token, int *tokenCount) {
+void break_to_command(char **token, int *tokenCount) {
     char input[512];
     char *p;
-    const char delims[] = " \t|><&;";
+    const char delims[] = "\t|><&;";
 
     // sizeof input is used rather than a hard-coded variable, for good practice.
     if(fgets(input, sizeof input, stdin) != NULL) {
@@ -27,4 +28,49 @@ void tokenise(char **token, int *tokenCount) {
         printf("\n");
         exit(0);
     }
+}
+
+void break_to_arg(char **args, int *argCount, char *input) {
+    const char delim[] = " ";
+     char word[64]; 
+    args[*argCount] = strtok(input, delim);
+
+    while(args[*argCount] != NULL) {
+        (*argCount)++;
+        args[*argCount] = strtok(NULL, delim);
+    }
+
+    args[(*argCount)+1] = NULL;
+
+    int quote = '"';
+    int quote_index = first_quote_occurence(args, argCount, quote);
+
+    if (quote_index > 0) {
+        for (int start = quote_index; start < *argCount; start++) {
+            for(int j = (start + 1); j < *argCount; j++) {
+                memcpy(word, args[start], strlen(args[start]));
+                if(strchr(args[j], quote) != NULL){
+                    // sets args[start] to (args[start] + " " + args[j])
+                    sprintf(args[start], "%s %s", word, args[j]);
+                break;
+                }
+                sprintf(args[start], "%s %s", word, args[j]);
+            }
+            break;
+        }
+        args[quote_index + 1] = '\0';
+    }
+}
+
+int first_quote_occurence(char **args, int *argCount, int quote) {
+    int index = 0;
+
+    for (int i = 0; i < *argCount; i++) {
+        if(strchr(args[i], quote) != NULL) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
 }

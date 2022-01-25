@@ -26,11 +26,11 @@
 
 int main(void) {
     while (true) {
-        char *token[256];
+        char *token[512];
         int tokenCount = 0;
 
         display_prompt();
-        tokenise(token, &tokenCount);
+        break_to_command(token, &tokenCount);
         handle_commands(token, tokenCount);
     }
     return 0;
