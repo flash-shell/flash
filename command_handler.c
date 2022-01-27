@@ -31,7 +31,8 @@ void handle_commands(char **token, int no_commands) {
 
             if (execvp(args[0], args) < 0) {
                 fprintf(stderr, "%s: Command not found\n", args[0]);
-            }   
+            }
+            fflush(stdout);
 
             _exit(EXIT_FAILURE);
         }
