@@ -13,7 +13,15 @@ void display_prompt() {
     USERNAME[511] = '\0';
     HOSTNAME[511] = '\0';
 
-    getlogin_r(USERNAME, 511);
+    /**
+     * getlogin_r() has faults on WSL, in which a random set of character is displayed rather than the username,
+     * this is due to the nature of the shell, hence if it's not equal to 0 then it's set to "defualt".
+     */
+
+    if (getlogin_r(USERNAME, sizeof(USERNAME)) != 0) {
+        strncpy(USERNAME, "default", sizeof(USERNAME));
+    }
+
     gethostname(HOSTNAME, 511);
 
     printf("\033[0;32m");
