@@ -56,6 +56,9 @@ void break_to_command(char **token, int *tokenCount) {
 }
 
 void break_to_arg(char **args, int *argCount, char *input) {
+    printf("%s", args[0]);
+    printf("%s", args[1]);
+
     const char delim[] = " ";
      char word[64]; 
     args[*argCount] = strtok(input, delim);
@@ -132,8 +135,13 @@ void handle_commands(char **token, int no_commands) {
             break_to_arg(args, &argCount, token[i]);
 
             if (execvp(args[0], args) < 0) {
-                fprintf(stderr, "%s: Command not found\n", args[0]);
+                for(int i = 0; i < argCount; i++) {
+                    if (strcmp(cd_args[i], "cd") == 0) {} else {
+                        fprintf(stderr, "%s: Command not found\n", args[0]);
+                    }
+                }
             }
+
             fflush(stdout);
 
             _exit(EXIT_FAILURE);
