@@ -9,6 +9,7 @@
 void display_prompt() {
     char USERNAME[512];
     char HOSTNAME[512];
+    char *cwd = getenv("PWD");
 
     USERNAME[511] = '\0';
     HOSTNAME[511] = '\0';
@@ -23,13 +24,16 @@ void display_prompt() {
     printf("@");
 
     printf("\033[0;32m");
-    printf("%s", HOSTNAME);
+    printf("%s:", HOSTNAME);
 
+    printf("\033[0;34m");
+    printf("%s", cwd);
+        
     printf("\033[0m");
     printf(" $ ");
 }
 
-void break_to_command(char **token, int *tokenCount) {
+void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) {
     char input[512];
     char *p;
     const char delims[] = "\t|><&;";
@@ -51,6 +55,7 @@ void break_to_command(char **token, int *tokenCount) {
         }
     } else {
         printf("\n");
+        setenv("PWD", ORIGINAL_PATH, 1);
         exit(0);
     }
 }
@@ -100,10 +105,13 @@ int first_quote_occurence(char **args, int *argCount, int quote) {
     return index;
 }
 
-void handle_commands(char **token, int no_commands) {
+void handle_commands(char **token, int no_commands, const char *ORIGINAL_PATH) {
     for (int i = 0; i < no_commands; i++) {
-        if (strcmp(token[i], "exit") == 0) 
+        if (strcmp(token[i], "exit") == 0) {
+            setenv("PWD", ORIGINAL_PATH, 1);
             exit(0);
+        }
+            
             
         pid_t child_pid = fork();
         if (child_pid == -1) {
