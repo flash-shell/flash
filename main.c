@@ -6,6 +6,9 @@
 #include "io_handler.h"
 
 int main(void) {
+
+    chdir(getenv("HOME"));
+
     while (true) {
         char *token[512];
         int tokenCount = 0;
