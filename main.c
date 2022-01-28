@@ -20,9 +20,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include "prompt.h"
-#include "tokenise.h"
-#include "command_handler.h"
+#include "io_handler.h"
 
 int main(void) {
     while (true) {
