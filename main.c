@@ -15,7 +15,7 @@ int main(void) {
 
         display_prompt();
         break_to_command(token, &tokenCount);
-        handle_commands(token, tokenCount);
+        handle_helper(token, tokenCount);
     }
     return 0;
 }

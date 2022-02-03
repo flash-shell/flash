@@ -56,8 +56,6 @@ void break_to_command(char **token, int *tokenCount) {
 }
 
 void break_to_arg(char **args, int *argCount, char *input) {
-    printf("%s", args[0]);
-    printf("%s", args[1]);
 
     const char delim[] = " ";
      char word[64]; 
@@ -68,7 +66,7 @@ void break_to_arg(char **args, int *argCount, char *input) {
         args[*argCount] = strtok(NULL, delim);
     }
 
-    args[(*argCount)+1] = NULL;
+    args[(*argCount)+2] = NULL;
 
     int quote = '"';
     int quote_index = first_quote_occurence(args, argCount, quote);
@@ -103,48 +101,50 @@ int first_quote_occurence(char **args, int *argCount, int quote) {
     return index;
 }
 
-void handle_commands(char **token, int no_commands) {
-    for (int i = 0; i < no_commands; i++) {
-        if (strcmp(token[i], "exit") == 0) 
-            exit(0);
-        
-        char *cd_args[512];
-        int cd_argCount = 0;
-        break_to_arg(cd_args, &cd_argCount, token[i]);
-        for(int i = 0; i < cd_argCount; i++) {
-            if (strcmp(cd_args[i], "cd") == 0)
-                chdir(cd_args[i+1]);
-        }
-            
-        pid_t child_pid = fork();
-        if (child_pid == -1) {
-            printf("Error. Failed to fork.");
-        } else if (child_pid > 0) {
-            // parent process
-            int status;
-            /* 
-             *  waitpid waits for a child_pid to finish executing
-             *  necessary as without it the parent process would
-             *  continue executing which could cause issues
-             */
-            waitpid(child_pid, &status, 0);
-        } else {
-            // child process
-            char *args[512];
-            int argCount = 0;
-            break_to_arg(args, &argCount, token[i]);
+void handle_helper(char **token, int no_commands) {
+    char *args[512];
+    int argCount = 0;
+    for(int i = 0; i < no_commands; i++) {
+        break_to_arg(args, &argCount, token[i]);
+        handle_commands(args, argCount);
+        argCount = 0;
+    }
+}
 
-            if (execvp(args[0], args) < 0) {
-                for(int i = 0; i < argCount; i++) {
-                    if (strcmp(cd_args[i], "cd") == 0) {} else {
-                        fprintf(stderr, "%s: Command not found\n", args[0]);
-                    }
+void handle_commands(char **args, int no_args) {
+    for (int i = 0; i < no_args; i++) {
+        if (strcmp(args[i], "exit") == 0) 
+            exit(0);
+
+        if (strcmp(args[i], "cd") == 0)
+            chdir(args[i+1]);
+    }
+        
+    pid_t child_pid = fork();
+    if (child_pid == -1) {
+        printf("Error. Failed to fork.");
+    } else if (child_pid > 0) {
+        // parent process
+        int status;
+        /* 
+            *  waitpid waits for a child_pid to finish executing
+            *  necessary as without it the parent process would
+            *  continue executing which could cause issues
+            */
+        waitpid(child_pid, &status, 0);
+    } else {
+        // child process
+
+        if (execvp(args[0], args) < 0) {
+            for(int i = 0; i < no_args; i++) {
+                if (strcmp(args[0], "cd") == 0) {} else {
+                    fprintf(stderr, "%s: Command not found\n", args[0]);
                 }
             }
-
-            fflush(stdout);
-
-            _exit(EXIT_FAILURE);
         }
+
+        fflush(stdout);
+
+        _exit(EXIT_FAILURE);
     }
 }
