@@ -8,6 +8,8 @@
 int main(void) {
     const char *ORIGINAL_PATH = getenv("PATH");
 
+    chdir(getenv("HOME"));
+
     while (true) {
         char *token[512];
         int tokenCount = 0;
