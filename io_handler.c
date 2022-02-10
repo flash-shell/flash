@@ -32,7 +32,7 @@ void display_prompt() {
 void break_to_command(char **token, int *tokenCount) {
     char input[512];
     char *p;
-    const char delims[] = "\t|><&;";
+    const char delims[] = "\t|><&; ";
 
     // sizeof input is used rather than a hard-coded variable, for good practice.
     if(fgets(input, sizeof input, stdin) != NULL) {
@@ -55,69 +55,13 @@ void break_to_command(char **token, int *tokenCount) {
     }
 }
 
-void break_to_arg(char **args, int *argCount, char *input) {
-
-    const char delim[] = " ";
-     char word[64]; 
-    args[*argCount] = strtok(input, delim);
-
-    while(args[*argCount] != NULL) {
-        (*argCount)++;
-        args[*argCount] = strtok(NULL, delim);
-    }
-
-    args[(*argCount)+2] = NULL;
-
-    int quote = '"';
-    int quote_index = first_quote_occurence(args, argCount, quote);
-
-    if (quote_index > 0) {
-        for (int start = quote_index; start < *argCount; start++) {
-            for(int j = (start + 1); j < *argCount; j++) {
-                memcpy(word, args[start], strlen(args[start]));
-                if(strchr(args[j], quote) != NULL){
-                    // sets args[start] to (args[start] + " " + args[j])
-                    sprintf(args[start], "%s %s", word, args[j]);
-                break;
-                }
-                sprintf(args[start], "%s %s", word, args[j]);
-            }
-            break;
-        }
-        args[quote_index + 1] = '\0';
-    }
-}
-
-int first_quote_occurence(char **args, int *argCount, int quote) {
-    int index = 0;
-
-    for (int i = 0; i < *argCount; i++) {
-        if(strchr(args[i], quote) != NULL) {
-            index = i;
-            break;
-        }
-    }
-
-    return index;
-}
-
-void handle_helper(char **token, int no_commands) {
-    char *args[512];
-    int argCount = 0;
-    for(int i = 0; i < no_commands; i++) {
-        break_to_arg(args, &argCount, token[i]);
-        handle_commands(args, argCount);
-        argCount = 0;
-    }
-}
-
-void handle_commands(char **args, int no_args) {
-    for (int i = 0; i < no_args; i++) {
-        if (strcmp(args[i], "exit") == 0) 
+void handle_commands(char **token, int no_token) {
+    for (int i = 0; i < no_token; i++) {
+        if (strcmp(token[i], "exit") == 0)
             exit(0);
 
-        if (strcmp(args[i], "cd") == 0)
-            chdir(args[i+1]);
+        if (strcmp(token[i], "cd") == 0)
+            chdir(token[i+1]);
     }
         
     pid_t child_pid = fork();
@@ -135,10 +79,10 @@ void handle_commands(char **args, int no_args) {
     } else {
         // child process
 
-        if (execvp(args[0], args) < 0) {
-            for(int i = 0; i < no_args; i++) {
-                if (strcmp(args[0], "cd") == 0) {} else {
-                    fprintf(stderr, "%s: Command not found\n", args[0]);
+        if (execvp(token[0], token) < 0) {
+            for(int i = 0; i < no_token; i++) {
+                if (strcmp(token[0], "cd") == 0) {} else {
+                    fprintf(stderr, "%s: command not found\n", token[0]);
                 }
             }
         }
