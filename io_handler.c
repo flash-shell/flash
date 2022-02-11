@@ -9,8 +9,11 @@
 void display_prompt() {
     char USERNAME[512];
     char HOSTNAME[512];
-    char *cwd = getenv("PWD");
 
+    // Initialised cwd as "cwd_default" as compiler warns when an unitialised variable used in getcwd()
+    char cwd[512] = "cwd_default";  
+    getcwd(cwd, sizeof(cwd));
+    
     USERNAME[511] = '\0';
     HOSTNAME[511] = '\0';
 
