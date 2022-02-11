@@ -81,8 +81,13 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
             exit(0);
         }
 
-        if (strcmp(token[i], "cd") == 0)
-            chdir(token[i+1]);
+        if (strcmp(token[i], "cd") == 0) {
+            if (token[i+1] == NULL) {
+                chdir(getenv("HOME"));
+            } else {
+                chdir(token[i+1]);
+            }
+        }
     }
         
     pid_t child_pid = fork();
