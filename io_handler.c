@@ -85,11 +85,23 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
         }
 
         if (strcmp(token[i], "cd") == 0) {
-            if (token[i+1] == NULL) {
+           if (token[i+1] == NULL) {
                 chdir(getenv("HOME"));
             } else {
                 chdir(token[i+1]);
             }
+            return;
+        }
+
+        if (strcmp(token[i], "getpath") == 0) {
+            printf("%s\n", getenv("PATH"));
+            return;
+        }
+
+        if (strcmp(token[i], "setpath") == 0) {
+            if (token[i+1] != NULL)
+                setenv("PATH", token[i+1], 1);
+            return;
         }
     }
         
@@ -113,13 +125,8 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
          *  if a command is not found an error is displayed to the terminal with the arg name.
          */
         if (execvp(token[0], token) < 0) {
-            for(int i = 0; i < no_token; i++) {
-                if (strcmp(token[0], "cd") == 0) {} else {
-                    fprintf(stderr, "%s: command not found\n", token[0]);
-                }
-            }
+            fprintf(stderr, "%s: command not found\n", token[0]);
         }
-
         fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
 
         _exit(EXIT_FAILURE);
