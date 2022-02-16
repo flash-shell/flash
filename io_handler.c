@@ -122,10 +122,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
 
         /*
          *  When execvp() is not successful, a -1 is returned, therefore,
-         *  if a command is not found an error is displayed to the terminal with the arg name.
+         *  if a command is not found an error is displayed to the terminal with the arg name via perror().
          */
+
         if (execvp(token[0], token) < 0) {
-            fprintf(stderr, "%s: command not found\n", token[0]);
+            perror(token[0]);
         }
         fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
 
