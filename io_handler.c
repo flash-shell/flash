@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <dirent.h>
+#include <errno.h>
 
 void display_prompt() {
     char USERNAME[512];
@@ -88,7 +90,15 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
            if (token[i+1] == NULL) {
                 chdir(getenv("HOME"));
             } else {
-                chdir(token[i+1]);
+                /*
+                * Here we check to see if the directory exists
+                * by using F_OK and Access which return 0 if the 
+                * directory exists 
+                */
+                if(access(token[i+1], F_OK) == 0)
+                    chdir(token[i+1]);
+                else
+                    perror(token[i+1]);
             }
             return;
         }
