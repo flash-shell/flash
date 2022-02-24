@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
+#include "history.h"
 
 void display_prompt() {
     char USERNAME[512];
@@ -46,7 +47,7 @@ void display_prompt() {
     printf(" $ ");
 }
 
-void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) {
+void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, int *count, int *pos, Node* history) {
     char input[512];    
     char *p;
     const char delims[] = "\t|><&; ";
@@ -62,6 +63,12 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) 
         // If last char in buffer is newline, replace it with end of line to allow for comparisons
         if ((p = strchr(input, '\n')) != NULL)
             *p = '\0';
+
+        if(input[0] != '!'){
+            addNode(history, *count, input, *pos);
+            *count = *count + 1;
+            *pos = (*pos + 1) % 20;
+        }
         token[*tokenCount] = strtok(input, delims);
 
         while(token[*tokenCount] != NULL) {
@@ -79,7 +86,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) 
     }
 }
 
-void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
+void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, Node* history) {
     for (int i = 0; i < no_token; i++) {
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -111,6 +118,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
         if (strcmp(token[i], "setpath") == 0) {
             if (token[i+1] != NULL)
                 setenv("PATH", token[i+1], 1);
+            return;
+        }
+
+        if(strcmp(token[i], "history") == 0){
+            printNodes(history);
             return;
         }
     }
