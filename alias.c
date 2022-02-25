@@ -6,10 +6,23 @@
 
 struct alias_struct *aliases = NULL;
 
-void create_alias(char **token) {
+void create_alias(char **token, int no_token) {
     bool exists;
     char *alias_val;
     struct alias_struct *astruct;
+    char *slicedToken[512];
+
+    /**
+     * Assign memcpy to slicedToken to move all the tokens
+     * to slicedToken, somewhat similar in style to Python slicing
+     * as it starts from index 1 of the original token char array.
+     */ 
+
+    for (int i = 0; i < no_token; i++) {
+        if (token[i] != NULL) {
+            slicedToken[i] = token[i + 2];
+        }
+    }
 
     /**
      * Both temporary arrays are set to the size of tokens,
@@ -17,7 +30,6 @@ void create_alias(char **token) {
      */ 
 
     char tempArray[sizeof token[1]];
-    char tempArray2[sizeof token[2]];
 
     /**
      *  Ensures that there is two commands present after 'alias'
@@ -40,7 +52,6 @@ void create_alias(char **token) {
      */
 
     strcpy(tempArray, token[1]);
-    strcpy(tempArray2, token[2]);
 
     alias_val = tempArray;
     exists = alias_exists(exists, alias_val);
@@ -54,7 +65,7 @@ void create_alias(char **token) {
     if (exists == false) {
         exists = count_users(exists);
         if (exists == false) {
-            bind_alias(tempArray, tempArray2);
+            bind_alias(tempArray, slicedToken, no_token);
         } else {
             printf("There already exist 10 aliases. Please unalias some commands to add more.\n");
         }
@@ -62,7 +73,7 @@ void create_alias(char **token) {
         printf("There was an alias with that name. Your alias was overwritten!\n");
         astruct = find_alias(alias_val);
         empty_alias(astruct);
-        bind_alias(tempArray, tempArray2);
+        bind_alias(tempArray, slicedToken, no_token);
     }
 }
 
@@ -100,14 +111,25 @@ bool alias_exists(bool exists, char *alias_val) {
     return exists;
 }
 
-void bind_alias(char temp[256], char temp2[256]) {
+void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
     struct alias_struct *a;
+    char listOfCommands[512];
 
     a = (struct alias_struct*)malloc(sizeof *a);
     strcpy((*a).alias, temp);
     HASH_ADD_STR(aliases, alias, a);
 
-    strcpy(a->command, temp2);
+    for(int i = 0; i < (no_token - 2); i++) {
+        strcat(listOfCommands, slicedToken[i]);
+        if (i != (no_token - 3)) {
+            strcat(listOfCommands, " ");
+        }
+    }
+
+    printf("%s", listOfCommands);
+    strcpy(a->command, listOfCommands);
+    
+    memset(listOfCommands, 0, sizeof listOfCommands);
 }
 
 void empty_alias(struct alias_struct *alias) {

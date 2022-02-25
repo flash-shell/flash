@@ -108,7 +108,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
             if(token[i+1] == NULL) {
                 show_aliases();
             } else {
-                create_alias(token);
+                create_alias(token, no_token);
             }
             return;
         }
