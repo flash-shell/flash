@@ -52,7 +52,12 @@ void create_alias(char **token) {
      */
 
     if (exists == false) {
-        bind_alias(tempArray, tempArray2);
+        exists = count_users(exists);
+        if (exists == false) {
+            bind_alias(tempArray, tempArray2);
+        } else {
+            printf("There already exist 10 aliases. Please unalias some commands to add more.\n");
+        }
     } else {
         printf("There was an alias with that name. Your alias was overwritten!\n");
         astruct = find_alias(alias_val);
@@ -141,4 +146,17 @@ void unalias(char **token) {
     } else {
         empty_alias(astruct2);
     }
+}
+
+bool count_users(bool exists) {
+    int num_of_aliases;
+    num_of_aliases = HASH_COUNT(aliases);
+
+    if (num_of_aliases == 9) {
+        exists = true;
+    } else {
+        exists = false;
+    }
+
+    return exists;
 }
