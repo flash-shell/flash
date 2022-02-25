@@ -77,9 +77,11 @@ void create_alias(char **token, int no_token) {
     }
 }
 
-void swap_token(char **token) {
+void swap_token(char **token, int no_token) {
     struct alias_struct *a;
     char *alias_val2;
+    char *commandPointer;
+    char tempWord[64];
     bool tempExists;
 
     /**
@@ -95,7 +97,23 @@ void swap_token(char **token) {
 
     if (tempExists == true) {
         a = find_alias(alias_val2);
-        strcpy(token[0], a->command);
+        commandPointer = a->command;
+
+        int length = (int) strlen(commandPointer);
+
+        for (int i = 0; (i < length); i++) {
+            if (commandPointer[i] != 32) {
+                char d = commandPointer[i];
+                char *dPointer = &d;
+                strncat(tempWord, dPointer, 1);
+                memset(&d, 0, sizeof d);
+            } else {
+                memset(tempWord, 0, sizeof tempWord);
+            }
+
+            printf("%s", tempWord);
+            // strcpy(token[i], tempWord);
+        }
     }
 }
 
@@ -126,9 +144,7 @@ void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
         }
     }
 
-    printf("%s", listOfCommands);
     strcpy(a->command, listOfCommands);
-    
     memset(listOfCommands, 0, sizeof listOfCommands);
 }
 

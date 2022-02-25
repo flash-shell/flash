@@ -113,7 +113,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
             return;
         }
 
-        swap_token(token);
+        swap_token(token, no_token);
 
         if (strcmp(token[i], "unalias") == 0) {
             if(token[i+1] != NULL) {
