@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
+#include "alias.h"
 
 void display_prompt() {
     char USERNAME[512];
@@ -103,6 +104,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
             return;
         }
 
+        if (strcmp(token[i], "alias") == 0) {
+            create_alias(token);
+            return;
+        }
+
         if (strcmp(token[i], "getpath") == 0) {
             printf("%s\n", getenv("PATH"));
             return;
@@ -138,8 +144,8 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
         if (execvp(token[0], token) < 0) {
             perror(token[0]);
         }
-        fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
 
+        fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
         _exit(EXIT_FAILURE);
     }
 }
