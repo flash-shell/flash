@@ -16,8 +16,13 @@ void create_alias(char **token) {
     bool exists;
     char *alias_val;
 
-    char tempArray[256];
-    char tempArray2[256];
+    /**
+     * Both temporary arrays are set to the size of tokens,
+     * otherwise the strings become malformed due to memory issues.
+     */ 
+
+    char tempArray[sizeof token[1]];
+    char tempArray2[sizeof token[2]];
 
     /**
      *  Ensures that there is two commands present after 'alias'
@@ -42,12 +47,7 @@ void create_alias(char **token) {
     strcpy(tempArray, token[1]);
     strcpy(tempArray2, token[2]);
 
-    /**
-     * Assign pointers to both temp variables.
-     */ 
-
     alias_val = tempArray;
-
     exists = alias_exists(exists, alias_val);
 
     /**
@@ -60,6 +60,32 @@ void create_alias(char **token) {
         bind_alias(tempArray, tempArray2);
     } else {
         printf("The alias already exists. Please choose a different name!\n");
+    }
+
+    // struct alias_struct *a;
+    // a = find_alias(alias_val);
+    // printf("Value of your alias is: %s", a->command);
+}
+
+void swap_token(char **token) {
+    struct alias_struct *a;
+    char *alias_val2;
+    bool tempExists;
+
+    /**
+     * Both temporary arrays are set to the size of tokens,
+     * otherwise the strings become malformed due to memory issues.
+     */
+
+    char tempArray3[sizeof token[0]];
+    strcpy(tempArray3, token[0]);
+
+    alias_val2 = tempArray3;
+    tempExists = alias_exists(tempExists, alias_val2);
+
+    if (tempExists == true) {
+        a = find_alias(alias_val2);
+        strcpy(token[0], a->command);
     }
 }
 
@@ -83,6 +109,14 @@ void bind_alias(char temp[256], char temp2[256]) {
     HASH_ADD_STR(aliases, alias, a);
 
     strcpy(a->command, temp2);
+}
+
+struct alias_struct *find_alias(char *alias_val) {
+    struct alias_struct *a;
+
+    HASH_FIND_STR(aliases, alias_val, a);
+
+    return a;
 }
 
 void show_aliases() {}
