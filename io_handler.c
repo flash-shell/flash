@@ -111,6 +111,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
 
         swap_token(token);
 
+        if (strcmp(token[i], "show") == 0) {
+            show_aliases();
+            return;
+        }
+
         if (strcmp(token[i], "getpath") == 0) {
             printf("%s\n", getenv("PATH"));
             return;

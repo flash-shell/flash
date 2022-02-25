@@ -61,10 +61,6 @@ void create_alias(char **token) {
     } else {
         printf("The alias already exists. Please choose a different name!\n");
     }
-
-    // struct alias_struct *a;
-    // a = find_alias(alias_val);
-    // printf("Value of your alias is: %s", a->command);
 }
 
 void swap_token(char **token) {
@@ -119,4 +115,10 @@ struct alias_struct *find_alias(char *alias_val) {
     return a;
 }
 
-void show_aliases() {}
+void show_aliases() {
+    struct alias_struct *a;
+
+    for (a = aliases; a != NULL; a = (struct alias_struct*) (a->hh.next)) {
+        printf("Alias: %s: Command: %s\n", a->alias, a->command);
+    }
+}
