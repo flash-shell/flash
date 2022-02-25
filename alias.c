@@ -119,6 +119,6 @@ void show_aliases() {
     struct alias_struct *a;
 
     for (a = aliases; a != NULL; a = (struct alias_struct*) (a->hh.next)) {
-        printf("Alias: %s: Command: %s\n", a->alias, a->command);
+        printf("Alias: %s | Command: %s\n", a->alias, a->command);
     }
 }

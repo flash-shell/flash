@@ -105,16 +105,15 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
         }
 
         if (strcmp(token[i], "alias") == 0) {
-            create_alias(token);
+            if(token[i+1] == NULL) {
+                show_aliases();
+            } else {
+                create_alias(token);
+            }
             return;
         }
 
         swap_token(token);
-
-        if (strcmp(token[i], "show") == 0) {
-            show_aliases();
-            return;
-        }
 
         if (strcmp(token[i], "getpath") == 0) {
             printf("%s\n", getenv("PATH"));
