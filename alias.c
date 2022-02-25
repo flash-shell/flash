@@ -4,17 +4,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct alias_struct {
-    char alias[256];
-    char command[256];
-    UT_hash_handle hh;
-};
-
 struct alias_struct *aliases = NULL;
 
 void create_alias(char **token) {
     bool exists;
     char *alias_val;
+    struct alias_struct *astruct;
 
     /**
      * Both temporary arrays are set to the size of tokens,
@@ -59,7 +54,10 @@ void create_alias(char **token) {
     if (exists == false) {
         bind_alias(tempArray, tempArray2);
     } else {
-        printf("The alias already exists. Please choose a different name!\n");
+        printf("There was an alias with that name. Your alias was overwritten!\n");
+        astruct = find_alias(alias_val);
+        empty_alias(astruct);
+        bind_alias(tempArray, tempArray2);
     }
 }
 
@@ -105,6 +103,11 @@ void bind_alias(char temp[256], char temp2[256]) {
     HASH_ADD_STR(aliases, alias, a);
 
     strcpy(a->command, temp2);
+}
+
+void empty_alias(struct alias_struct *alias) {
+    HASH_DEL(aliases, alias);
+    free(alias);
 }
 
 struct alias_struct *find_alias(char *alias_val) {
