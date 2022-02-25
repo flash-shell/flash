@@ -15,6 +15,7 @@ bool alias_exists(bool exists, char *alias_val);
 void bind_alias(char temp[256], char temp2[256]);
 void empty_alias(struct alias_struct *alias);
 void swap_token(char **token);
+void unalias(char **token);
 void show_aliases();
 
 struct alias_struct *find_alias(char *alias_val);

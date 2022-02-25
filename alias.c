@@ -125,3 +125,20 @@ void show_aliases() {
         printf("Alias: %s | Command: %s\n", a->alias, a->command);
     }
 }
+
+void unalias(char **token) {
+    char *alias_val3;
+    struct alias_struct *astruct2;
+
+    char tempArray4[sizeof token[1]];
+    strcpy(tempArray4, token[1]);
+
+    alias_val3 = tempArray4;
+    astruct2 = find_alias(alias_val3);
+
+    if (astruct2 == NULL) {
+        printf("This alias name does not exist. Please try again.\n");
+    } else {
+        empty_alias(astruct2);
+    }
+}

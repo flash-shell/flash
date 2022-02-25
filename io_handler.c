@@ -115,6 +115,15 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
 
         swap_token(token);
 
+        if (strcmp(token[i], "unalias") == 0) {
+            if(token[i+1] != NULL) {
+                unalias(token);
+            } else {
+                printf("Please provide the alias name to remove.\n");
+            }
+            return;
+        }
+
         if (strcmp(token[i], "getpath") == 0) {
             printf("%s\n", getenv("PATH"));
             return;
