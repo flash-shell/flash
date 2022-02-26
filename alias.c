@@ -77,12 +77,14 @@ void create_alias(char **token, int no_token) {
     }
 }
 
-void swap_token(char **token, int no_token) {
+void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token) {
     struct alias_struct *a;
     char *alias_val2;
-    char *commandPointer;
-    char tempWord[64];
     bool tempExists;
+
+    char *p;
+    const char delims[] = "\t|><&; ";
+    *tokenCount = 0;
 
     /**
      * Both temporary arrays are set to the size of tokens,
@@ -95,24 +97,30 @@ void swap_token(char **token, int no_token) {
     alias_val2 = tempArray3;
     tempExists = alias_exists(tempExists, alias_val2);
 
+    /**
+     * 
+     *
+     */ 
+
     if (tempExists == true) {
         a = find_alias(alias_val2);
-        commandPointer = a->command;
 
-        int length = (int) strlen(commandPointer);
+        if ((p = strchr(a->command, '\n')) != NULL) {
+            *p = '\0';
+        }
 
-        for (int i = 0; (i < length); i++) {
-            if (commandPointer[i] != 32) {
-                char d = commandPointer[i];
-                char *dPointer = &d;
-                strncat(tempWord, dPointer, 1);
-                memset(&d, 0, sizeof d);
-            } else {
-                memset(tempWord, 0, sizeof tempWord);
-            }
+        tempNewToken[*tokenCount] = strtok(a->command, delims);
 
-            printf("%s", tempWord);
-            // strcpy(token[i], tempWord);
+        while(tempNewToken[*tokenCount] != NULL) {
+            (*tokenCount)++;
+            tempNewToken[*tokenCount] = strtok(NULL, delims);
+        }
+
+        strcpy(token[0], tempNewToken[0]);
+        if (token[1] != NULL) {
+            strcpy(token[1], tempNewToken[1]);
+        } else {
+            token[1] = tempNewToken[1];
         }
     }
 }

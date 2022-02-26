@@ -14,7 +14,7 @@ void create_alias(char **token, int no_token);
 bool alias_exists(bool exists, char *alias_val);
 void bind_alias(char temp[512], char *slicedToken[512], int no_token);
 void empty_alias(struct alias_struct *alias);
-void swap_token(char **token, int no_token);
+void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token);
 void unalias(char **token);
 bool count_users(bool exists);
 void show_aliases();

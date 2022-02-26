@@ -12,11 +12,12 @@ int main(void) {
 
     while (true) {
         char *token[512];
+        char *tempNewToken[512];
         int tokenCount = 0;
 
         display_prompt();
         break_to_command(token, &tokenCount, ORIGINAL_PATH);
-        handle_commands(token, tokenCount, ORIGINAL_PATH);
+        handle_commands(token, tempNewToken, &tokenCount, tokenCount, ORIGINAL_PATH);
     }
     return 0;
 }
