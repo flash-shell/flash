@@ -108,7 +108,6 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
             *p = '\0';
         }
 
-// QUESTION: why dont you just use break_to_command()
         tempNewToken[*tokenCount] = strtok(tempCommand, delims);
 
         while(tempNewToken[*tokenCount] != NULL) {
@@ -127,7 +126,6 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
     }
 }
 
-// QUESTION: why is exists passed in, does nothing?
 bool alias_exists(char *alias_val) {
     struct alias_struct *a;
     bool exists;
