@@ -7,7 +7,6 @@
 struct alias_struct *aliases = NULL;
 
 void create_alias(char **token, int no_token) {
-    bool exists;
     char *alias_val;
     struct alias_struct *astruct;
     char *slicedToken[512];
@@ -54,7 +53,6 @@ void create_alias(char **token, int no_token) {
     strcpy(tempArray, token[1]);
 
     alias_val = tempArray;
-    exists = alias_exists(exists, alias_val);
 
     /**
      * Checkes whether the given alias key exists,
@@ -62,25 +60,24 @@ void create_alias(char **token, int no_token) {
      * it binds it.
      */
 
-    if (exists == false) {
-        exists = count_users(exists);
-        if (exists == false) {
-            bind_alias(tempArray, slicedToken, no_token);
-        } else {
-            printf("There already exist 10 aliases. Please unalias some commands to add more.\n");
-        }
-    } else {
+    if (alias_exists(alias_val)) {
         printf("There was an alias with that name. Your alias was overwritten!\n");
         astruct = find_alias(alias_val);
         empty_alias(astruct);
         bind_alias(tempArray, slicedToken, no_token);
+    } else {
+        if (alias_limit_reached()) {
+            printf("There already exist 10 aliases. Please unalias some commands to add more.\n");
+        } else {
+            bind_alias(tempArray, slicedToken, no_token);
+        }
+        
     }
 }
 
 void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token) {
     struct alias_struct *a;
     char *alias_val2;
-    bool tempExists;
 
     char tempCommand[512];
     char *p;
@@ -94,23 +91,24 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
 
     char tempArray3[sizeof token[0]];
     strcpy(tempArray3, token[0]);
-
+// QUESTION: why temp array before going into alias_var2
     alias_val2 = tempArray3;
-    tempExists = alias_exists(tempExists, alias_val2);
 
     /**
      * 
      *
      */ 
 
-    if (tempExists == true) {
+    if (alias_exists(alias_val2)) {
         a = find_alias(alias_val2);
         strcpy(tempCommand, a->command);
 
+        // If last character of tempCommand is newline, replace it with end of line to allow for comparisons
         if ((p = strchr(tempCommand, '\n')) != NULL) {
             *p = '\0';
         }
 
+// QUESTION: why dont you just use break_to_command()
         tempNewToken[*tokenCount] = strtok(tempCommand, delims);
 
         while(tempNewToken[*tokenCount] != NULL) {
@@ -129,8 +127,10 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
     }
 }
 
-bool alias_exists(bool exists, char *alias_val) {
+// QUESTION: why is exists passed in, does nothing?
+bool alias_exists(char *alias_val) {
     struct alias_struct *a;
+    bool exists;
 
     HASH_FIND_STR(aliases, alias_val, a);
 
@@ -198,15 +198,16 @@ void unalias(char **token) {
     }
 }
 
-bool count_users(bool exists) {
+bool alias_limit_reached() {
     int num_of_aliases;
     num_of_aliases = HASH_COUNT(aliases);
+    bool limitReached;
 
     if (num_of_aliases == 9) {
-        exists = true;
+        limitReached = true;
     } else {
-        exists = false;
+        limitReached = false;
     }
 
-    return exists;
+    return limitReached;
 }
