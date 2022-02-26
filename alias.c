@@ -91,7 +91,6 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
 
     char tempArray3[sizeof token[0]];
     strcpy(tempArray3, token[0]);
-// QUESTION: why temp array before going into alias_var2
     alias_val2 = tempArray3;
 
     /**
@@ -114,8 +113,6 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
             (*tokenCount)++;
             tempNewToken[*tokenCount] = strtok(NULL, delims);
         }
-
-        printf("%s", tempCommand);
 
         strcpy(token[0], tempNewToken[0]);
         if (token[1] != NULL) {

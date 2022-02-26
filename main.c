@@ -18,6 +18,9 @@ int main(void) {
         display_prompt();
         break_to_command(token, &tokenCount, ORIGINAL_PATH);
         handle_commands(token, tempNewToken, &tokenCount, tokenCount, ORIGINAL_PATH);
+
+        memset(&token, 0, sizeof token);
+        memset(&tempNewToken, 0, sizeof token);
     }
     return 0;
 }
