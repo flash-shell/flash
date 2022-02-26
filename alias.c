@@ -115,11 +115,20 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
         }
 
         strcpy(token[0], tempNewToken[0]);
-        if (token[1] != NULL) {
-            strcpy(token[1], tempNewToken[1]);
-        } else {
-            token[1] = tempNewToken[1];
+
+        for(int i = 0; i < a->no_of_tokens; i++) {
+            if (token[i] != NULL) {
+                strcpy(token[i], tempNewToken[i]);
+            } else {
+                token[i] = tempNewToken[i];
+            }
         }
+
+        // if (token[1] != NULL) {
+        //     strcpy(token[1], tempNewToken[1]);
+        // } else {
+        //     token[1] = tempNewToken[1];
+        // }
     }
 }
 
@@ -146,6 +155,7 @@ void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
 
     for(int i = 0; i < (no_token - 2); i++) {
         strcat(listOfCommands, slicedToken[i]);
+        a->no_of_tokens++;
         if (i != (no_token - 3)) {
             strcat(listOfCommands, " ");
         }

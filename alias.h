@@ -7,6 +7,7 @@ typedef int bool;
 struct alias_struct {
     char alias[512];
     char command[512];
+    int no_of_tokens;
     UT_hash_handle hh;
 };
 
