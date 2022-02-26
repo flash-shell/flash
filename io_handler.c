@@ -113,8 +113,6 @@ void handle_commands(char **token, char **tempNewToken, int *tokenCount, int no_
             return;
         }
 
-        swap_token(token, tempNewToken, tokenCount, no_token);
-
         if (strcmp(token[i], "unalias") == 0) {
             if(token[i+1] != NULL) {
                 unalias(token);
@@ -135,6 +133,8 @@ void handle_commands(char **token, char **tempNewToken, int *tokenCount, int no_
             return;
         }
     }
+
+    swap_token(token, tempNewToken, tokenCount, no_token);
         
     pid_t child_pid = fork();
     if (child_pid == -1) {

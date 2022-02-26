@@ -82,6 +82,7 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
     char *alias_val2;
     bool tempExists;
 
+    char tempCommand[512];
     char *p;
     const char delims[] = "\t|><&; ";
     *tokenCount = 0;
@@ -104,17 +105,20 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
 
     if (tempExists == true) {
         a = find_alias(alias_val2);
+        strcpy(tempCommand, a->command);
 
-        if ((p = strchr(a->command, '\n')) != NULL) {
+        if ((p = strchr(tempCommand, '\n')) != NULL) {
             *p = '\0';
         }
 
-        tempNewToken[*tokenCount] = strtok(a->command, delims);
+        tempNewToken[*tokenCount] = strtok(tempCommand, delims);
 
         while(tempNewToken[*tokenCount] != NULL) {
             (*tokenCount)++;
             tempNewToken[*tokenCount] = strtok(NULL, delims);
         }
+
+        printf("%s", tempCommand);
 
         strcpy(token[0], tempNewToken[0]);
         if (token[1] != NULL) {
