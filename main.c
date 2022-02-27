@@ -24,7 +24,7 @@ int main(void) {
 
         display_prompt();
         break_to_command(token, &tokenCount, ORIGINAL_PATH, &count, &pos, history);
-        handle_commands(token, tokenCount, ORIGINAL_PATH, history);
+        handle_commands(token, tokenCount, ORIGINAL_PATH, &count, &pos, history);
     }
     return 0;
 }
@@ -85,11 +85,6 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
             *p = '\0';
 
         token[*tokenCount] = strtok(input, delims);
-        if(input[0] != '!' && strcmp(token[0], "history") != 0){
-            addNode(history, *count, input, *pos);
-            *count = *count + 1;
-            *pos = (*pos + 1) % 20;
-        }
 
         while(token[*tokenCount] != NULL) {
             (*tokenCount)++;
@@ -99,6 +94,13 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
              */
             token[*tokenCount] = strtok(NULL, delims);
         }
+
+        if(input[0] != '!' && strcmp(token[0], "history") != 0){
+            addNode(history, *count, *pos, token, *tokenCount);
+            *count = *count + 1;
+            *pos = (*pos + 1) % 20;
+        }
+
     } else {
         printf("\n");
         setenv("PWD", ORIGINAL_PATH, 1);
@@ -106,7 +108,8 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
     }
 }
 
-void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, Node* history) {
+void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int*count, int* pos, Node* history) {
+    // check tokens for commands execvp()won't recognise
     for (int i = 0; i < no_token; i++) {
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -144,6 +147,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, Node
         if(strcmp(token[i], "history") == 0){
             printNodes(history);
             return;
+        }
+
+        if(strcmp(token[i], "!!") == 0){
+            get(history, *count - 1, token);
+            break;
         }
     }
         

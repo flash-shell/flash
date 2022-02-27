@@ -3,30 +3,44 @@
 #include <stdio.h>
 #include <string.h>
 
-char* get(Node* arr, int id){
+void get(Node* arr, int id, char** token){
     int i = 0;
-    
+
     while(arr[i].id != NULL){
-        if(arr[i].id == id)
-            return arr[i].command;
+        printf("%d\n", arr[i].id);
+        if(arr[i].id == id){ 
+            printf("%d\t", arr[i].id);
+            for(int j = 0; j < arr[i].no_token; j++){
+                strcpy(token[j], arr[i].command[j]);
+                printf("%s ", arr[i].command[j]);
+            }
+            printf("\n");
+            return;
+        }
         i++;
     }
-    return "";
 }
-void addNode(Node* arr, int id, char* command,int pos){
-    char *_command = malloc(sizeof(char) * strlen(command));
-    strcpy(_command, command);
-    Node next = {id, _command};
+void addNode(Node* arr, int id, int pos, char **token, int no_token){
+    char **command = malloc(sizeof(char*) * no_token);
+    for(int i = 0; i < no_token; i++){
+        command[i] = malloc(sizeof(char) * strlen(token[i]));
+        strcpy(command[i], token[i]);
+    }
+    Node next = {id, command, no_token};
     arr[pos] = next;
 }
 
 void printNodes(Node* arr){
     int i = 0;
 
-    printf("History: \n\n");
+    printf("History:\n\n");
     
     while(arr[i].id != NULL){
-        printf("%d %s\n",arr[i].id, arr[i].command);
+        printf("%d\t", arr[i].id);
+        for(int j = 0; j < arr[i].no_token; j++){
+            printf("%s ", arr[i].command[j]);
+        }
+        printf("\n");
         i++;
     }
 }
