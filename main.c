@@ -14,7 +14,7 @@ int main(void) {
 
     chdir(getenv("HOME"));
 
-    int count =  1;
+    int count = 1;
     int pos = 0;
     Node *history = malloc(sizeof(Node) * 20);
 
@@ -97,7 +97,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
 
         if(input[0] != '!' && strcmp(token[0], "history") != 0){
             addNode(history, *count, *pos, token, *tokenCount);
-            *count = *count + 1;
+            *count = *count + 1;      
             *pos = (*pos + 1) % 20;
         }
 
@@ -108,8 +108,9 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
     }
 }
 
-void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int*count, int* pos, Node* history) {
+void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
     // check tokens for commands execvp()won't recognise
+
     for (int i = 0; i < no_token; i++) {
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
