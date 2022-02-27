@@ -19,6 +19,12 @@ int main(void) {
         break_to_command(token, &tokenCount, ORIGINAL_PATH);
         handle_commands(token, tempNewToken, &tokenCount, tokenCount, ORIGINAL_PATH);
 
+        /**
+         * memset() is used on both 'token' and 'tempNewToken' which essentially
+         * frees the memory assigned to the arrays after commands are handles from
+         * user input. Without memory being freed, the aliases do not work correctly.
+         */ 
+
         memset(&token, 0, sizeof token);
         memset(&tempNewToken, 0, sizeof token);
     }
