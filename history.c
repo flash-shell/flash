@@ -1,6 +1,7 @@
 #include "history.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 char* get(Node* arr, int id){
     int i = 0;
@@ -13,10 +14,10 @@ char* get(Node* arr, int id){
     return "";
 }
 void addNode(Node* arr, int id, char* command,int pos){
-    Node next = {id, command};
+    char *_command = malloc(sizeof(char) * strlen(command));
+    strcpy(_command, command);
+    Node next = {id, _command};
     arr[pos] = next;
-
-    printf("%d, %d\n", id, pos);
 }
 
 void printNodes(Node* arr){
