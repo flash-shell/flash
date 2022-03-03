@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
-#include "history.h"
+#include "header.h"
 
 int main(void) {
     const char *ORIGINAL_PATH = getenv("PATH");
@@ -86,7 +86,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
 
         token[*tokenCount] = strtok(input, delims);
 
-        while(token[*tokenCount] != NULL) {
+        while (token[*tokenCount] != NULL) {
             (*tokenCount)++;
             /*
              *  Here, "NULL" is passed as the first arg instead of the input, as strtok() has an
@@ -95,7 +95,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
             token[*tokenCount] = strtok(NULL, delims);
         }
 
-        if(input[0] != '!' && strcmp(token[0], "history") != 0){
+        if (input[0] != '!' && strcmp(token[0], "history") != 0){
             addNode(history, *count, *pos, token, *tokenCount);
             *count = *count + 1;      
             *pos = (*pos + 1) % 20;
@@ -145,13 +145,40 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
             return;
         }
 
-        if(strcmp(token[i], "history") == 0){
+        if (strcmp(token[i], "history") == 0){
+            if(token[i+1] != NULL){
+                printf("Error. Too many arguments\n");
+                return;
+            }
             printNodes(history);
             return;
         }
 
-        if(strcmp(token[i], "!!") == 0){
-            get(history, *count - 1, token);
+        if (token[i][0] == '!'){
+            if(token[i+1] != NULL){
+                printf("Error. Too many arguments\n");
+                return;
+            }
+
+            if (strcmp(token[i], "!!") == 0){
+                if (get(history, *count - 1, token) == 0)
+                    return;
+            }else if (token[i][1] == '-'){
+                if (token[i][2] >= '0' && token[i][2] <= '9'){
+                    int id = *count - atoi(&token[i][2]) ;
+                    if (get(history, id, token) == 0)
+                        return;
+                }
+                printf("Error. invalid history invocation\n");
+                return;
+            }else if (token[i][1] >= '0' && token[i][1] <= '9'){
+                int id = atoi(&token[i][1]);
+                if (get(history, id, token) == 0)
+                    return;
+            }else{
+                printf("Error. invalid history invocation\n");
+                return;
+            }
             break;
         }
     }

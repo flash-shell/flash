@@ -1,12 +1,12 @@
-#include "history.h"
+#include "header.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-void get(Node* arr, int id, char** token){
+int get(Node* arr, int id, char** token){
     int i = 0;
 
-    while(arr[i].id != NULL){
+    while(arr[i].command != NULL){
         if(arr[i].id == id){
             for(int j = 0; j < arr[i].no_token; j++){
                 if (token[j] != NULL) {
@@ -17,10 +17,12 @@ void get(Node* arr, int id, char** token){
                 printf("%s ", arr[i].command[j]);
             }
             printf("\n");
-            return;
+            return 1;
         }
         i++;
     }
+    printf("id %d not found\n", id);
+    return 0;
 }
 
 void addNode(Node* arr, int id, int pos, char **token, int no_token){
@@ -38,7 +40,7 @@ void printNodes(Node* arr){
 
     printf("History:\n\n");
     
-    while(arr[i].id != NULL){
+    while(arr[i].command != NULL){
         printf("%d\t", arr[i].id);
         for(int j = 0; j < arr[i].no_token; j++){
             printf("%s ", arr[i].command[j]);
