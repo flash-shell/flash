@@ -233,6 +233,9 @@ void show_aliases() {
      * Loops over all aliases and prints them out to the user,
      * in an aesthetic way.
      */ 
+    if ((a=aliases) == NULL){
+        printf("No aliases exist\n");
+    }
 
     for (a = aliases; a != NULL; a = (struct alias_struct*) (a->hh.next)) {
         printf("Alias: %s | Command: %s\n", a->alias, a->command);
