@@ -14,9 +14,7 @@ int get(Node* arr, int id, char** token){
                 } else {
                     token[j] = arr[i].command[j];
                 }
-                printf("%s ", arr[i].command[j]);
             }
-            printf("\n");
             return 1;
         }
         i++;
@@ -40,7 +38,7 @@ void printNodes(Node* arr){
 
     printf("History:\n\n");
     
-    while(arr[i].command != NULL){
+    while(arr[i].command != NULL && i < 20){
         printf("%d\t", arr[i].id);
         for(int j = 0; j < arr[i].no_token; j++){
             printf("%s ", arr[i].command[j]);
