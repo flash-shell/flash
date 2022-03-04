@@ -252,7 +252,8 @@ void unalias(char **token) {
     char *aliasValue;
     struct alias_struct *aliasStruct;
 
-    char aliasKey[sizeof token[1]];
+    char aliasKey[128];
+
     strcpy(aliasKey, token[1]);
 
     aliasValue = aliasKey;
