@@ -160,7 +160,9 @@ bool alias_exists(char *alias_val) {
 void bind_alias(char aliasToken[512], char *slicedToken[512], int no_token) {
     struct alias_struct *aliasStruct;
     char listOfCommands[512];
-    
+    // Sets the memory to 0 as sometimes on Linux systems it holds random data on declaration.
+    memset(listOfCommands, 0, sizeof listOfCommands); 
+
     /**
      * First, a is declared as a pointer to alias_struct, in which then
      * the value from temp is copied into it (which holds the token of index 1, the alias name).
@@ -177,6 +179,9 @@ void bind_alias(char aliasToken[512], char *slicedToken[512], int no_token) {
      * token[2] would be the start of the values for the alias.
      */ 
 
+    memset(&aliasStruct->no_of_tokens, 0, sizeof aliasStruct->no_of_tokens);
+
+
     for(int i = 0; i < (no_token - 2); i++) {
         strcat(listOfCommands, slicedToken[i]); // The current iteration index of slicedToken is concatenated into listOfCommands.
         aliasStruct->no_of_tokens++; // no_of_tokens is incremented, to later be used to swap tokens correctly.
@@ -187,13 +192,11 @@ void bind_alias(char aliasToken[512], char *slicedToken[512], int no_token) {
     }
 
     /**
-     * The list of commands is the copied into a->command (which holds the value of the key:value pair),
-     * and then the memory is freed of listOfCommands to not cause any memory issues
-     * later on in the shell.
+     * The list of commands is the copied into a->command 
+     * (which holds the value of the key:value pair),
      */ 
 
     strcpy(aliasStruct->command, listOfCommands);
-    memset(listOfCommands, 0, sizeof listOfCommands);
 }
 
 void empty_alias(struct alias_struct *alias) {
