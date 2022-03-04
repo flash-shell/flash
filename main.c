@@ -95,7 +95,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
             token[*tokenCount] = strtok(NULL, delims);
         }
 
-        if (input[0] != '!'){
+        if (input[0] != '!' && input[0] != NULL){
             addNode(history, *count, *pos, token, *tokenCount);
             *count = *count + 1;      
             *pos = (*pos + 1) % 20;
