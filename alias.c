@@ -76,14 +76,16 @@ void create_alias(char **token, int no_token) {
     }
 }
 
-void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token) {
+void swap_token(char **token, char **tempNewToken) {
     struct alias_struct *a;
     char *alias_val2;
 
     char tempCommand[512];
     char *p;
     const char delims[] = "\t|><&; ";
-    *tokenCount = 0;
+
+    int tokenCount = 0;
+    int *tokenPointer = &tokenCount;
 
     /**
      * A temporary array is declared, and is set to the size of tokens,
@@ -112,17 +114,17 @@ void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token
             *p = '\0';
         }
 
-        tempNewToken[*tokenCount] = strtok(tempCommand, delims);
+        tempNewToken[*tokenPointer] = strtok(tempCommand, delims);
 
-        while(tempNewToken[*tokenCount] != NULL) {
-            (*tokenCount)++;
+        while(tempNewToken[*tokenPointer] != NULL) {
+            (*tokenPointer)++;
 
             /*
              *  Here, "NULL" is passed as the first arg instead of the input, as strtok() has an
              *  internal state (static pointer) which remembers the last input.
              */
 
-            tempNewToken[*tokenCount] = strtok(NULL, delims);
+            tempNewToken[*tokenPointer] = strtok(NULL, delims);
         }
 
         strcpy(token[0], tempNewToken[0]);
@@ -233,8 +235,9 @@ void show_aliases() {
      * Loops over all aliases and prints them out to the user,
      * in an aesthetic way.
      */ 
+
     if ((a=aliases) == NULL){
-        printf("No aliases exist\n");
+        printf("No aliases exist yet!\n");
     }
 
     for (a = aliases; a != NULL; a = (struct alias_struct*) (a->hh.next)) {

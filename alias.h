@@ -15,7 +15,7 @@ void create_alias(char **token, int no_token);
 bool alias_exists(char *alias_val);
 void bind_alias(char temp[512], char *slicedToken[512], int no_token);
 void empty_alias(struct alias_struct *alias);
-void swap_token(char **token, char **tempNewToken, int *tokenCount, int no_token);
+void swap_token(char **token, char **tempNewToken);
 void unalias(char **token);
 bool alias_limit_reached();
 void show_aliases();

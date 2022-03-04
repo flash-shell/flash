@@ -16,8 +16,8 @@ int main(void) {
         int tokenCount = 0;
 
         display_prompt();
-        break_to_command(token, &tokenCount, ORIGINAL_PATH);
-        handle_commands(token, tempNewToken, &tokenCount, tokenCount, ORIGINAL_PATH);
+        break_to_command(token, tempNewToken, &tokenCount, ORIGINAL_PATH);
+        handle_commands(token, &tokenCount, tokenCount, ORIGINAL_PATH);
 
         /**
          * memset() is used on both 'token' and 'tempNewToken' which essentially

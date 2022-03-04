@@ -47,7 +47,7 @@ void display_prompt() {
     printf(" $ ");
 }
 
-void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) {
+void break_to_command(char **token, char **tempNewToken, int *tokenCount, const char *ORIGINAL_PATH) {
     char input[512];    
     char *p;
     const char delims[] = "\t|><&; ";
@@ -78,9 +78,11 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) 
         setenv("PWD", ORIGINAL_PATH, 1);
         exit(0);
     }
+
+    swap_token(token, tempNewToken);
 }
 
-void handle_commands(char **token, char **tempNewToken, int *tokenCount, int no_token, const char *ORIGINAL_PATH) {  
+void handle_commands(char **token, int *tokenCount, int no_token, const char *ORIGINAL_PATH) {   
     for (int i = 0; i < no_token; i++) {
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -134,8 +136,6 @@ void handle_commands(char **token, char **tempNewToken, int *tokenCount, int no_
         }
     }
 
-    swap_token(token, tempNewToken, tokenCount, no_token);
-        
     pid_t child_pid = fork();
     if (child_pid == -1) {
         printf("Error. Failed to fork.");
