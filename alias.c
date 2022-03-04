@@ -70,7 +70,7 @@ void create_alias(char **token, int no_token) {
     }
 }
 
-void swap_token(char **token, char **tokenCopy) {
+void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
     char *aliasValue;
     struct alias_struct *aliasStruct;
     char commandHolder[512];
@@ -128,12 +128,19 @@ void swap_token(char **token, char **tokenCopy) {
          */
 
         for(int i = 0; i < aliasStruct->no_of_tokens; i++) {
-            if (token[i] != NULL) {
+            if (strcmp(token[i], tokenCopy[i]) == 0) {
                 strcpy(token[i], tokenCopy[i]);
             } else {
-                token[i] = tokenCopy[i];
+                token[i + 1] = malloc(64);
+                strcpy(token[i + 1], token[i]);
+                strcpy(token[i], tokenCopy[i]);
             }
         }
+
+        // printf("end\n");
+        // printf("%s\n", token[0]);
+        // printf("%s\n", token[1]);
+        // printf("%s\n", token[2]);
     }
 }
 

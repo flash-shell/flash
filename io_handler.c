@@ -79,10 +79,11 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
         exit(0);
     }
 
-    swap_token(token, tempNewToken);
+    swap_token(token, tempNewToken, tokenCount);
 }
 
-void handle_commands(char **token, int *tokenCount, int no_token, const char *ORIGINAL_PATH) {   
+void handle_commands(char **token, int *tokenCount, int no_token, const char *ORIGINAL_PATH) { 
+
     for (int i = 0; i < no_token; i++) {
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
