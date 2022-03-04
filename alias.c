@@ -47,13 +47,7 @@ void create_alias(char **token, int no_token) {
     char tempArray[sizeof token[1]];
     strcpy(tempArray, token[1]);
     alias_val = tempArray;
-
-    /**
-     * Checks whether the given alias key exists,
-     * if it does it throws an error to the user, else
-     * it binds it.
-     */
-
+    
     /**
      * Checks whether the given alias key exists,
      * if it does then it prints a message to the user notifying them that
@@ -288,7 +282,7 @@ bool alias_limit_reached() {
      * to true.
      */
 
-    if (num_of_aliases == 9) {
+    if (num_of_aliases == 10) {
         limitReached = true;
     } else {
         limitReached = false;
