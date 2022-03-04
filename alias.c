@@ -136,11 +136,6 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
                 strcpy(token[i], tokenCopy[i]);
             }
         }
-
-        // printf("end\n");
-        // printf("%s\n", token[0]);
-        // printf("%s\n", token[1]);
-        // printf("%s\n", token[2]);
     }
 }
 
