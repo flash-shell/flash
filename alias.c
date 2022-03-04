@@ -7,8 +7,8 @@
 struct alias_struct *aliases = NULL;
 
 void create_alias(char **token, int no_token) {
-    char *alias_val;
-    struct alias_struct *astruct;
+    char *aliasValue;
+    struct alias_struct *aliasStruct;
     char *slicedToken[512];
 
     /**
@@ -39,15 +39,15 @@ void create_alias(char **token, int no_token) {
     }
 
     /**
-     * Copies over token[1] into a tempArray of size token[1] in order
+     * Copies over token[1] into a aliasToken of size token[1] in order
      * to later copy values from a char array to another char array, which token
      * is not by default.
      */ 
 
-    char tempArray[sizeof token[1]];
-    strcpy(tempArray, token[1]);
-    alias_val = tempArray;
-    
+    char aliasToken[sizeof token[1]];
+    strcpy(aliasToken, token[1]);
+    aliasValue = aliasToken;
+
     /**
      * Checks whether the given alias key exists,
      * if it does then it prints a message to the user notifying them that
@@ -56,28 +56,26 @@ void create_alias(char **token, int no_token) {
      * limit has been reached, if so, it throws an error. If not, it binds the alias.
      */ 
 
-    if (alias_exists(alias_val)) {
+    if (alias_exists(aliasValue)) {
         printf("There was an alias with that name. Your alias was overwritten!\n");
-        astruct = find_alias(alias_val);
-        empty_alias(astruct);
-        bind_alias(tempArray, slicedToken, no_token);
+        aliasStruct = find_alias(aliasValue);
+        empty_alias(aliasStruct);
+        bind_alias(aliasToken, slicedToken, no_token);
     } else {
         if (alias_limit_reached()) {
             printf("There already exist 10 aliases. Please unalias some commands to add more.\n");
         } else {
-            bind_alias(tempArray, slicedToken, no_token);
+            bind_alias(aliasToken, slicedToken, no_token);
         }
     }
 }
 
-void swap_token(char **token, char **tempNewToken) {
-    struct alias_struct *a;
-    char *alias_val2;
-
-    char tempCommand[512];
+void swap_token(char **token, char **tokenCopy) {
+    char *aliasValue;
+    struct alias_struct *aliasStruct;
+    char commandHolder[512];
     char *p;
     const char delims[] = "\t|><&; ";
-
     int tokenCount = 0;
     int *tokenPointer = &tokenCount;
 
@@ -86,31 +84,30 @@ void swap_token(char **token, char **tempNewToken) {
      * otherwise the strings become malformed due to memory issues.
      */
 
-    char tempArray3[sizeof token[0]];
-    strcpy(tempArray3, token[0]);
-    alias_val2 = tempArray3;
+    char temporaryToken[sizeof token[0]];
+    strcpy(temporaryToken, token[0]);
+    aliasValue = temporaryToken;
 
     /**
      * First, the if statement only runs if alias_exists. alias_exists() returns either a
      * true or false value set by the custom typedef of bool. It starts of by finding the alias
      * as it already knows it exists, which is then copied into a temporary array of size 512, as
-     * without it the a->command becomes malformed again due to memory issues. Then it tokenizes
+     * without it the aliasStruct->command becomes malformed again due to memory issues. Then it tokenizes
      * the value of the key.
-     * (can be fixed?)
      */ 
 
-    if (alias_exists(alias_val2)) {
-        a = find_alias(alias_val2);
-        strcpy(tempCommand, a->command);
+    if (alias_exists(aliasValue)) {
+        aliasStruct = find_alias(aliasValue);
+        strcpy(commandHolder, aliasStruct->command);
 
-        // If last character of tempCommand is newline, replace it with end of line to allow for comparisons
-        if ((p = strchr(tempCommand, '\n')) != NULL) {
+        // If last character of commandHolder is newline, replace it with end of line to allow for comparisons
+        if ((p = strchr(commandHolder, '\n')) != NULL) {
             *p = '\0';
         }
 
-        tempNewToken[*tokenPointer] = strtok(tempCommand, delims);
+        tokenCopy[*tokenPointer] = strtok(commandHolder, delims);
 
-        while(tempNewToken[*tokenPointer] != NULL) {
+        while(tokenCopy[*tokenPointer] != NULL) {
             (*tokenPointer)++;
 
             /*
@@ -118,10 +115,10 @@ void swap_token(char **token, char **tempNewToken) {
              *  internal state (static pointer) which remembers the last input.
              */
 
-            tempNewToken[*tokenPointer] = strtok(NULL, delims);
+            tokenCopy[*tokenPointer] = strtok(NULL, delims);
         }
 
-        strcpy(token[0], tempNewToken[0]);
+        strcpy(token[0], tokenCopy[0]);
 
         /**
          * This for loops serves to loop over the amount of tokens that is contained within the current key->value pair, which is defined in
@@ -130,11 +127,11 @@ void swap_token(char **token, char **tempNewToken) {
          * tokens are simply assigned a new value. This will happen in the case of a single worded alias executing multiple commands/arguments.
          */
 
-        for(int i = 0; i < a->no_of_tokens; i++) {
+        for(int i = 0; i < aliasStruct->no_of_tokens; i++) {
             if (token[i] != NULL) {
-                strcpy(token[i], tempNewToken[i]);
+                strcpy(token[i], tokenCopy[i]);
             } else {
-                token[i] = tempNewToken[i];
+                token[i] = tokenCopy[i];
             }
         }
     }
@@ -148,20 +145,20 @@ bool alias_exists(char *alias_val) {
      * is then returned.
      */ 
 
-    struct alias_struct *a;
+    struct alias_struct *aliasStruct;
     bool exists;
 
-    HASH_FIND_STR(aliases, alias_val, a);
+    HASH_FIND_STR(aliases, alias_val, aliasStruct);
 
-    if (a == NULL) {
+    if (aliasStruct == NULL) {
         exists = false;
     } else {exists = true; }
 
     return exists;
 }
 
-void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
-    struct alias_struct *a;
+void bind_alias(char aliasToken[512], char *slicedToken[512], int no_token) {
+    struct alias_struct *aliasStruct;
     char listOfCommands[512];
     
     /**
@@ -170,9 +167,9 @@ void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
      * It then adds the string to the hashmap via HASH_ADD_STR().
      */ 
 
-    a = (struct alias_struct*)malloc(sizeof *a);
-    strcpy((*a).alias, temp);
-    HASH_ADD_STR(aliases, alias, a);
+    aliasStruct = (struct alias_struct*)malloc(sizeof *aliasStruct);
+    strcpy((*aliasStruct).alias, aliasToken);
+    HASH_ADD_STR(aliases, alias, aliasStruct);
 
     /**
      * Loops over (no_token - 2) times, since it serves to append the value to the key,
@@ -182,7 +179,7 @@ void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
 
     for(int i = 0; i < (no_token - 2); i++) {
         strcat(listOfCommands, slicedToken[i]); // The current iteration index of slicedToken is concatenated into listOfCommands.
-        a->no_of_tokens++; // no_of_tokens is incremented, to later be used to swap tokens correctly.
+        aliasStruct->no_of_tokens++; // no_of_tokens is incremented, to later be used to swap tokens correctly.
 
         if (i != (no_token - 3)) {
             strcat(listOfCommands, " "); // a space is appended in between tokens.
@@ -195,7 +192,7 @@ void bind_alias(char temp[512], char *slicedToken[512], int no_token) {
      * later on in the shell.
      */ 
 
-    strcpy(a->command, listOfCommands);
+    strcpy(aliasStruct->command, listOfCommands);
     memset(listOfCommands, 0, sizeof listOfCommands);
 }
 
@@ -210,16 +207,16 @@ void empty_alias(struct alias_struct *alias) {
 }
 
 struct alias_struct *find_alias(char *alias_val) {
-    struct alias_struct *a;
+    struct alias_struct *aliasStruct;
 
     /**
      * HASH_FIND_STR() finds the key:value struct, 
      * assigns it to "a" and returns it.
      */
 
-    HASH_FIND_STR(aliases, alias_val, a);
+    HASH_FIND_STR(aliases, alias_val, aliasStruct);
 
-    return a;
+    return aliasStruct;
 }
 
 void show_aliases() {
@@ -249,14 +246,14 @@ void unalias(char **token) {
      * a char pointer at the moment.
      */ 
 
-    char *alias_val3;
-    struct alias_struct *astruct2;
+    char *aliasValue;
+    struct alias_struct *aliasStruct;
 
-    char tempArray4[sizeof token[1]];
-    strcpy(tempArray4, token[1]);
+    char aliasKey[sizeof token[1]];
+    strcpy(aliasKey, token[1]);
 
-    alias_val3 = tempArray4;
-    astruct2 = find_alias(alias_val3);
+    aliasValue = aliasKey;
+    aliasStruct = find_alias(aliasValue);
 
     /**
      * find_alias() returns a pointer to a struct, if it's NULL it means
@@ -264,10 +261,10 @@ void unalias(char **token) {
      * of the shell, otherwise, the alias is deleted via empty_alias().
      */ 
 
-    if (astruct2 == NULL) {
+    if (aliasStruct == NULL) {
         printf("This alias name does not exist. Please try again.\n");
     } else {
-        empty_alias(astruct2);
+        empty_alias(aliasStruct);
     }
 }
 
