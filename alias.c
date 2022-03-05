@@ -128,12 +128,16 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
          */
 
         for(int i = 0; i < aliasStruct->no_of_tokens; i++) {
-            if (strcmp(token[i], tokenCopy[i]) == 0) {
-                strcpy(token[i], tokenCopy[i]);
+            if (token[i] != NULL) {
+                if (strcmp(token[i], tokenCopy[i]) == 0) {
+                    strcpy(token[i], tokenCopy[i]);
+                } else {
+                    token[i + 1] = malloc(64);
+                    strcpy(token[i + 1], token[i]);
+                    strcpy(token[i], tokenCopy[i]);
+                }
             } else {
-                token[i + 1] = malloc(64);
-                strcpy(token[i + 1], token[i]);
-                strcpy(token[i], tokenCopy[i]);
+                token[i] = tokenCopy[i];
             }
         }
     }
