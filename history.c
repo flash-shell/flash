@@ -34,16 +34,34 @@ void addNode(Node* arr, int id, int pos, char **token, int no_token){
 }
 
 void printNodes(Node* arr){
-    int i = 0;
+    int count = 0;
+    int index = getEarliest(arr);
 
     printf("History:\n\n");
     
-    while(arr[i].command != NULL && i < 20){
-        printf("%d\t", arr[i].id);
-        for(int j = 0; j < arr[i].no_token; j++){
-            printf("%s ", arr[i].command[j]);
+    while(arr[index].command != NULL && count < 20){
+        printf("%d\t", arr[index].id);
+        for(int j = 0; j < arr[index].no_token; j++){
+            printf("%s ", arr[index].command[j]);
         }
         printf("\n");
+        count++;
+        index = (index + 1) % 20;
+    }
+}
+
+int getEarliest(Node* arr){
+    int i = 1;
+    int earliest = arr[0].id;
+    int index = 0;
+
+    while(arr[i].command != NULL && i < 20){
+        if(arr[i].id < earliest){
+            earliest = arr[i].id;
+            index = i;
+        }
         i++;
     }
+
+    return index;
 }

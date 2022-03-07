@@ -15,6 +15,7 @@ typedef struct NODE {
 int get(Node* arr, int id, char** token);
 void addNode(Node* arr,int id, int pos, char** token, int no_commands);
 void printNodes(Node* arr);
+int getEarliest(Node * arr);
 
 /*
  *  Io handler functions
