@@ -19,7 +19,7 @@ int get(Node* arr, int id, char** token){
         }
         i++;
     }
-    printf("id %d not found\n", id);
+    printf("Error. ID %d is not found in history\n", id);
     return 0;
 }
 

@@ -114,7 +114,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
     for (int i = 0; i < no_token; i++) {
         if (token[i][0] == '!'){
             if(token[i+1] != NULL){
-                printf("Error. Too many arguments\n");
+                printf("Error. History invocation has too many arguements\n");
                 return;
             }
 
@@ -127,7 +127,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
                     if (get(history, id, token) == 0)
                         return;
                 }else{
-                    printf("Error. invalid history invocation\n");
+                    printf("Error. Invalid history invocation argument. Use !<no> or !-<no>\n");
                     return;
                 }
             }else if (token[i][1] >= '0' && token[i][1] <= '9'){
@@ -135,7 +135,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
                 if (get(history, id, token) == 0)
                     return;
             }else{
-                printf("Error. invalid history invocation\n");
+                printf("Error. Invalid history invocation argument. Use !<no> or !-<no>\n");
                 return;
             }
         }
@@ -175,7 +175,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
 
         if (strcmp(token[i], "history") == 0){
             if(token[i+1] != NULL){
-                printf("Error. Too many arguments\n");
+                printf("Error. History doesn't take arguments\n");
                 return;
             }
             printNodes(history);
