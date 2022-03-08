@@ -97,9 +97,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
                 */
                 if (token[i+2] != NULL)
                     printf("Error. \"cd\" requires exactly one argument.\n");
-                else if (access(token[i+1], F_OK) == 0)
+                else if(access(token[i+1], F_OK) == 0) {
                     chdir(token[i+1]);
-                else {
+                    if (errno != 0)
+                        perror(token[i+1]);
+                } else {
                     perror(token[i+1]);
                     printf("Please select an existing file or directory.\n");
                 }
