@@ -95,10 +95,13 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
                 * by using F_OK and Access which return 0 if the 
                 * directory exists 
                 */
-                if(access(token[i+1], F_OK) == 0)
+                if(token[i+2] != NULL)
+                    printf("Cannot have two statements for cd remove second statement \n");
+                else if(access(token[i+1], F_OK) == 0)
                     chdir(token[i+1]);
                 else
                     perror(token[i+1]);
+                    printf("Please select an existing file or directory\n");
             }
             return;
         }
