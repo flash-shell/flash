@@ -112,8 +112,8 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
     // check tokens for commands execvp()won't recognise
 
     for (int i = 0; i < no_token; i++) {
-        if (token[i][0] == '!'){
-            if(token[i+1] != NULL){
+        if (token[i][0] == '!') {
+            if (token[i+1] != NULL) {
                 printf("Error. History invocation has too many arguements\n");
                 return;
             }
@@ -121,20 +121,20 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
             if (strcmp(token[i], "!!") == 0){
                 if (get(history, *count - 1, token) == 0)
                     return;
-            }else if (token[i][1] == '-'){
-                if (token[i][2] >= '0' && token[i][2] <= '9'){
+            } else if (token[i][1] == '-') {
+                if (token[i][2] >= '0' && token[i][2] <= '9') {
                     int id = *count - atoi(&token[i][2]) ;
                     if (get(history, id, token) == 0)
                         return;
-                }else{
+                } else {
                     printf("Error. Invalid history invocation argument. Use !<no> or !-<no>\n");
                     return;
                 }
-            }else if (token[i][1] >= '0' && token[i][1] <= '9'){
+            } else if (token[i][1] >= '0' && token[i][1] <= '9') {
                 int id = atoi(&token[i][1]);
                 if (get(history, id, token) == 0)
                     return;
-            }else{
+            } else {
                 printf("Error. Invalid history invocation argument. Use !<no> or !-<no>\n");
                 return;
             }
