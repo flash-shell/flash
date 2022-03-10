@@ -15,6 +15,12 @@ int get(Node* arr, int id, char** token) {
                     token[j] = arr[i].command[j];
                 }
             }
+
+            // alias check
+            int tokenCount = arr[i].no_token;
+            char *tempNewToken[512];
+            swap_token(token, tempNewToken, &tokenCount);
+
             return 1;
         }
         i++;
