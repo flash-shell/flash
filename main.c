@@ -122,20 +122,20 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
                 if (get(history, *count - 1, token) == 0)
                     return;
             }else if (token[i][1] == '-'){
-                if (token[i][2] >= '0' && token[i][2] <= '9'){
+                if (checkNumber(&token[i][2]) == 1){
                     int id = *count - atoi(&token[i][2]) ;
                     if (get(history, id, token) == 0)
                         return;
                 }else{
-                    printf("Error. Invalid history invocation argument. Use !<no> or !-<no>\n");
+                    printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                     return;
                 }
-            }else if (token[i][1] >= '0' && token[i][1] <= '9'){
+            }else if (checkNumber(&token[i][1]) == 1){
                 int id = atoi(&token[i][1]);
                 if (get(history, id, token) == 0)
                     return;
             }else{
-                printf("Error. Invalid history invocation argument. Use !<no> or !-<no>\n");
+                printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                 return;
             }
         }
@@ -210,4 +210,13 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
 
         _exit(EXIT_FAILURE);
     }
+}
+
+int checkNumber(char* string){
+    for(int  i = 0; i < strlen(string); i++){
+        if(string[i] < '0' || string[i] >'9'){
+            return 0;
+        }
+    }
+    return 1;
 }

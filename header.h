@@ -16,6 +16,7 @@ int get(Node* arr, int id, char** token);
 void addNode(Node* arr,int id, int pos, char** token, int no_commands);
 void printNodes(Node* arr);
 int getEarliest(Node * arr);
+int checkNumber(char* string);
 
 /*
  *  Io handler functions
