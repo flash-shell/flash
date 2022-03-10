@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 
-int get(Node* arr, int id, char** token){
+int get(Node* arr, int id, char** token) {
     int i = 0;
 
-    while(arr[i].command != NULL){
-        if(arr[i].id == id){
-            for(int j = 0; j < arr[i].no_token; j++){
+    while (arr[i].command != NULL) {
+        if (arr[i].id == id) {
+            for (int j = 0; j < arr[i].no_token; j++) {
                 if (token[j] != NULL) {
                     strcpy(token[j], arr[i].command[j]);
                 } else {
@@ -23,9 +23,9 @@ int get(Node* arr, int id, char** token){
     return 0;
 }
 
-void addNode(Node* arr, int id, int pos, char **token, int no_token){
+void addNode(Node* arr, int id, int pos, char **token, int no_token) {
     char **command = malloc(sizeof(char*) * no_token);
-    for(int i = 0; i < no_token; i++){
+    for (int i = 0; i < no_token; i++) {
         command[i] = malloc(sizeof(char) * strlen(token[i]));
         strcpy(command[i], token[i]);
     }
@@ -33,15 +33,15 @@ void addNode(Node* arr, int id, int pos, char **token, int no_token){
     arr[pos] = next;
 }
 
-void printNodes(Node* arr){
+void printNodes(Node* arr) {
     int count = 0;
     int index = getEarliest(arr);
 
     printf("History:\n\n");
     
-    while(arr[index].command != NULL && count < 20){
+    while (arr[index].command != NULL && count < 20) {
         printf("%d\t", arr[index].id);
-        for(int j = 0; j < arr[index].no_token; j++){
+        for (int j = 0; j < arr[index].no_token; j++) {
             printf("%s ", arr[index].command[j]);
         }
         printf("\n");
@@ -50,13 +50,13 @@ void printNodes(Node* arr){
     }
 }
 
-int getEarliest(Node* arr){
+int getEarliest(Node* arr) {
     int i = 1;
     int earliest = arr[0].id;
     int index = 0;
 
-    while(arr[i].command != NULL && i < 20){
-        if(arr[i].id < earliest){
+    while (arr[i].command != NULL && i < 20) {
+        if (arr[i].id < earliest) {
             earliest = arr[i].id;
             index = i;
         }
