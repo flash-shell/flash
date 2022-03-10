@@ -1,8 +1,9 @@
-#include "alias.h"
+#include "header.h"
 #include "uthash.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 struct alias_struct *aliases = NULL;
 
