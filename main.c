@@ -95,7 +95,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
             token[*tokenCount] = strtok(NULL, delims);
         }
 
-        if (input[0] != '!' && input[0]){
+        if (input[0] != '!' && input[0]) {
             addNode(history, *count, *pos, token, *tokenCount);
             *count = *count + 1;      
             *pos = (*pos + 1) % 20;
@@ -118,11 +118,11 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
                 return;
             }
 
-            if (strcmp(token[i], "!!") == 0){
+            if (strcmp(token[i], "!!") == 0) {
                 if (get(history, *count - 1, token) == 0)
                     return;
-            } else if (token[i][1] == '-'){
-                if (checkNumber(&token[i][2]) == 1){
+            } else if (token[i][1] == '-') {
+                if (checkNumber(&token[i][2]) == 1) {
                     int id = *count - atoi(&token[i][2]) ;
                     if (get(history, id, token) == 0)
                         return;
@@ -130,7 +130,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
                     printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                     return;
                 }
-            } else if (checkNumber(&token[i][1]) == 1){
+            } else if (checkNumber(&token[i][1]) == 1) {
                 int id = atoi(&token[i][1]);
                 if (get(history, id, token) == 0)
                     return;
@@ -174,7 +174,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
         }
 
         if (strcmp(token[i], "history") == 0){
-            if(token[i+1] != NULL){
+            if (token[i+1] != NULL) {
                 printf("Error. History doesn't take arguments\n");
                 return;
             }
