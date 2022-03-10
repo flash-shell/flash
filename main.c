@@ -12,11 +12,21 @@ int main(void) {
 
     while (true) {
         char *token[512];
+        char *tokenCopy[512];
         int tokenCount = 0;
 
         display_prompt();
-        break_to_command(token, &tokenCount, ORIGINAL_PATH);
-        handle_commands(token, tokenCount, ORIGINAL_PATH);
+        break_to_command(token, tokenCopy, &tokenCount, ORIGINAL_PATH);
+        handle_commands(token, &tokenCount, tokenCount, ORIGINAL_PATH);
+
+        /**
+         * memset() is used on both 'token' and 'tokenCopy' which essentially
+         * frees the memory assigned to the arrays after commands are handles from
+         * user input. Without memory being freed, the aliases do not work correctly.
+         */ 
+
+        memset(&token, 0, sizeof token);
+        memset(&tokenCopy, 0, sizeof token);
     }
     return 0;
 }

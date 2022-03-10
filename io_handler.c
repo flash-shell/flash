@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
+#include "alias.h"
 
 void display_prompt() {
     char USERNAME[512];
@@ -46,7 +47,7 @@ void display_prompt() {
     printf(" $ ");
 }
 
-void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) {
+void break_to_command(char **token, char **tempNewToken, int *tokenCount, const char *ORIGINAL_PATH) {
     char input[512];    
     char *p;
     const char delims[] = "\t|><&; ";
@@ -77,9 +78,12 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH) 
         setenv("PWD", ORIGINAL_PATH, 1);
         exit(0);
     }
+
+    swap_token(token, tempNewToken, tokenCount);
 }
 
-void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
+void handle_commands(char **token, int *tokenCount, int no_token, const char *ORIGINAL_PATH) { 
+
     for (int i = 0; i < no_token; i++) {
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -109,6 +113,24 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
             return;
         }
 
+        if (strcmp(token[i], "alias") == 0) {
+            if(token[i+1] == NULL) {
+                show_aliases();
+            } else {
+                create_alias(token, no_token);
+            }
+            return;
+        }
+
+        if (strcmp(token[i], "unalias") == 0) {
+            if(token[i+1] != NULL) {
+                unalias(token);
+            } else {
+                printf("Please provide the alias name to remove.\n");
+            }
+            return;
+        }
+
         if (strcmp(token[i], "getpath") == 0) {
             if (token[i+1] != NULL) {
                 printf("Error. \"getpath\" does not take arguments.\n");
@@ -131,7 +153,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
             return;
         }
     }
-        
+
     pid_t child_pid = fork();
     if (child_pid == -1) {
         printf("Error. Failed to fork.");
@@ -155,8 +177,8 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH) {
         if (execvp(token[0], token) < 0) {
             perror(token[0]);
         }
-        fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
 
+        fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
         _exit(EXIT_FAILURE);
     }
 }
