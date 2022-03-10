@@ -86,7 +86,11 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
      */
 
     char temporaryToken[sizeof token[0]];
-    strcpy(temporaryToken, token[0]);
+
+    if (token[0] != NULL) {
+        strcpy(temporaryToken, token[0]);
+    } 
+    
     aliasValue = temporaryToken;
 
     /**
