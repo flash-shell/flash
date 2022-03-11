@@ -111,10 +111,10 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
             *count = *count + 1;      
             *pos = (*pos + 1) % 20;
         }
-
     } else {
         printf("\n");
         setenv("PWD", ORIGINAL_PATH, 1);
+        saveAlias();
         exit(0);
     }
 

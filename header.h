@@ -52,5 +52,6 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens);
 void unalias(char **token);
 bool alias_limit_reached();
 void show_aliases();
+void saveAlias();
 
 struct alias_struct *find_alias(char *alias_val);

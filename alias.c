@@ -302,3 +302,20 @@ bool alias_limit_reached() {
 
     return limitReached;
 }
+
+void saveAlias() {
+    struct alias_struct *a;
+    FILE *aliasFile;
+    
+    aliasFile = fopen(".aliases", "w");
+
+    if (aliasFile == NULL) {
+        return;
+    }
+
+    for (a = aliases; a != NULL; a = (struct alias_struct*) (a->hh.next)) {
+        fprintf(aliasFile, "%s %s\n", a->alias, a->command);
+    }
+
+    fclose(aliasFile);
+}
