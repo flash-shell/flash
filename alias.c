@@ -45,7 +45,7 @@ void create_alias(char **token, int no_token) {
      * is not by default.
      */ 
 
-    char aliasToken[sizeof token[1]];
+    char aliasToken[64];
     strcpy(aliasToken, token[1]);
     aliasValue = aliasToken;
 
@@ -263,7 +263,7 @@ void unalias(char **token) {
     char *aliasValue;
     struct alias_struct *aliasStruct;
 
-    char aliasKey[128];
+    char aliasKey[64];
 
     strcpy(aliasKey, token[1]);
 
