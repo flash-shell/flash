@@ -11,8 +11,8 @@
 
 int main(void) {
     const char *ORIGINAL_PATH = getenv("PATH");
-
     chdir(getenv("HOME"));
+    loadAlias();
 
     int count = 1;
     int pos = 0;

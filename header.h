@@ -53,5 +53,6 @@ void unalias(char **token);
 bool alias_limit_reached();
 void show_aliases();
 void saveAlias();
+void loadAlias();
 
 struct alias_struct *find_alias(char *alias_val);

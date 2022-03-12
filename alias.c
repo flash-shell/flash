@@ -307,7 +307,7 @@ void saveAlias() {
     struct alias_struct *a;
     FILE *aliasFile;
     
-    aliasFile = fopen(".aliases", "w");
+    aliasFile = fopen("temporary.file", "w");
 
     if (aliasFile == NULL) {
         return;
@@ -318,4 +318,29 @@ void saveAlias() {
     }
 
     fclose(aliasFile);
+}
+
+void loadAlias() {
+    char input[256];
+    char name[256];
+    char command[256];
+    struct alias_struct *a;
+    FILE *aliasFile;
+    
+    aliasFile = fopen("temporary.file", "r");
+
+    if (aliasFile == NULL) {
+        return;
+    }
+
+    while(fgets(input, sizeof input, aliasFile)) {
+        a = (struct alias_struct*)malloc(sizeof *a);
+        
+  	    sscanf(input, "%s %[^\n]", name, command);
+        strcpy((*a).alias, name);
+        strcpy((*a).command, command);
+        HASH_ADD_STR(aliases, alias, a);
+
+        memset(&a, 0, sizeof a);
+    }
 }
