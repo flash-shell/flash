@@ -307,7 +307,7 @@ void saveAlias() {
     struct alias_struct *a;
     FILE *aliasFile;
     
-    aliasFile = fopen("temporary.file", "w");
+    aliasFile = fopen(".aliases", "w");
 
     if (aliasFile == NULL) {
         return;
@@ -327,7 +327,7 @@ void loadAlias() {
     struct alias_struct *a;
     FILE *aliasFile;
     
-    aliasFile = fopen("temporary.file", "r");
+    aliasFile = fopen(".aliases", "r");
 
     if (aliasFile == NULL) {
         return;
@@ -343,4 +343,6 @@ void loadAlias() {
 
         memset(&a, 0, sizeof a);
     }
+
+    fclose(aliasFile);
 }
