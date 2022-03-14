@@ -113,7 +113,7 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
 
         tokenCopy[*tokenPointer] = strtok(commandHolder, delims);
 
-        while(tokenCopy[*tokenPointer] != NULL) {
+        while (tokenCopy[*tokenPointer] != NULL) {
             (*tokenPointer)++;
 
             /*
@@ -341,7 +341,7 @@ void loadAlias() {
      * command straight from the keyboard.
      */
     const char delims[] = "\t|><&; ";
-    while(fgets(input, sizeof input, aliasFile)) {
+    while (fgets(input, sizeof input, aliasFile)) {
   	    sscanf(input, "%s %[^\n]", name, command);
         int tokenCount = 2;
         char *token[512];
