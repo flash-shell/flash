@@ -325,7 +325,6 @@ void loadAlias() {
     char input[256];
     char name[256];
     char command[256];
-    struct alias_struct *a;
     FILE *aliasFile;
     
     aliasFile = fopen(".aliases", "r");
@@ -334,15 +333,27 @@ void loadAlias() {
         return;
     }
 
+    /*
+     * Same tokenisation steps as are in break_to_command,
+     * except what I've done here is essentially rebuilt an
+     * alias command, so that create_alias() can parse it
+     * as it would a command straight from the keyboard.
+     */
+    const char delims[] = "\t|><&; ";
     while(fgets(input, sizeof input, aliasFile)) {
-        a = (struct alias_struct*)malloc(sizeof *a);
-        
   	    sscanf(input, "%s %[^\n]", name, command);
-        strcpy((*a).alias, name);
-        strcpy((*a).command, command);
-        HASH_ADD_STR(aliases, alias, a);
+        int tokenCount = 2;
+        char *token[512];
+        token[0] = "alias";
+        token[1] = name;
+        token[2] = strtok(command, delims);
 
-        memset(&a, 0, sizeof a);
+        while (token[tokenCount] != NULL) {
+            tokenCount++;
+            token[tokenCount] = strtok(NULL, delims);
+        }
+
+        create_alias(token, tokenCount);
     }
 
     fclose(aliasFile);
