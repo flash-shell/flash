@@ -86,6 +86,7 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
      */
 
     char temporaryToken[sizeof token[0]];
+    memset(temporaryToken, 0, sizeof temporaryToken);
 
     if (token[0] != NULL) {
         strcpy(temporaryToken, token[0]);
