@@ -336,9 +336,9 @@ void loadAlias() {
 
     /*
      * Same tokenisation steps as are in break_to_command,
-     * except what I've done here is essentially rebuilt an
-     * alias command, so that create_alias() can parse it
-     * as it would a command straight from the keyboard.
+     * except this essentially rebuilds an alias command
+     * so that create_alias() can parse it as it would a
+     * command straight from the keyboard.
      */
     const char delims[] = "\t|><&; ";
     while(fgets(input, sizeof input, aliasFile)) {
