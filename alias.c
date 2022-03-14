@@ -306,8 +306,9 @@ bool alias_limit_reached() {
 void saveAlias() {
     struct alias_struct *a;
     FILE *aliasFile;
-    
-    aliasFile = fopen(".aliases", "w");
+    char *aliasFilePath = getenv("HOME");
+    strcat(aliasFilePath, "/.aliases");
+    aliasFile = fopen(aliasFilePath, "w");
 
     if (aliasFile == NULL) {
         return;
