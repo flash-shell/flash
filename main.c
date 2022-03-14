@@ -167,7 +167,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
                 * by using F_OK and Access which return 0 if the 
                 * directory exists 
                 */
-                if(access(token[i+1], F_OK) == 0)
+                if (access(token[i+1], F_OK) == 0)
                     chdir(token[i+1]);
                 else
                     perror(token[i+1]);
@@ -176,7 +176,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
         }
 
         if (strcmp(token[i], "alias") == 0) {
-            if(token[i+1] == NULL) {
+            if (token[i+1] == NULL) {
                 show_aliases();
             } else {
                 create_alias(token, no_token);
@@ -185,7 +185,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
         }
 
         if (strcmp(token[i], "unalias") == 0) {
-            if(token[i+1] != NULL) {
+            if (token[i+1] != NULL) {
                 unalias(token);
             } else {
                 printf("Please provide the alias name to remove.\n");
@@ -204,7 +204,7 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
             return;
         }
 
-        if (strcmp(token[i], "history") == 0){
+        if (strcmp(token[i], "history") == 0) {
             if (token[i+1] != NULL) {
                 printf("Error. History doesn't take arguments\n");
                 return;
@@ -244,8 +244,8 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
 }
 
 int checkNumber(char* string){
-    for(int  i = 0; i < strlen(string); i++){
-        if(string[i] < '0' || string[i] >'9'){
+    for (int  i = 0; i < strlen(string); i++) {
+        if (string[i] < '0' || string[i] >'9') {
             return 0;
         }
     }

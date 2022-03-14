@@ -133,7 +133,7 @@ void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
          * tokens are simply assigned a new value. This will happen in the case of a single worded alias executing multiple commands/arguments.
          */
 
-        for(int i = 0; i < aliasStruct->no_of_tokens; i++) {
+        for (int i = 0; i < aliasStruct->no_of_tokens; i++) {
             if (token[i] != NULL) {
                 if (strcmp(token[i], tokenCopy[i]) == 0) {
                     strcpy(token[i], tokenCopy[i]);
@@ -194,7 +194,7 @@ void bind_alias(char aliasToken[512], char *slicedToken[512], int no_token) {
     memset(&aliasStruct->no_of_tokens, 0, sizeof aliasStruct->no_of_tokens);
 
 
-    for(int i = 0; i < (no_token - 2); i++) {
+    for (int i = 0; i < (no_token - 2); i++) {
         strcat(listOfCommands, slicedToken[i]); // The current iteration index of slicedToken is concatenated into listOfCommands.
         aliasStruct->no_of_tokens++; // no_of_tokens is incremented, to later be used to swap tokens correctly.
 
