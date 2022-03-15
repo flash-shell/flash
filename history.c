@@ -18,8 +18,7 @@ int get(Node* arr, int id, char** token) {
 
             // alias check
             int tokenCount = arr[i].no_token;
-            char *tempNewToken[512];
-            swap_token(token, tempNewToken, &tokenCount);
+            swap_token(token, &tokenCount);
 
             return 1;
         }
