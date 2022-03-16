@@ -17,6 +17,7 @@ int main(void) {
     int count = 1;
     int pos = 0;
     Node *history = malloc(sizeof(Node) * 20);
+    loadHistory(history, &count, &pos);
 
     while (true) {
         char *token[512];

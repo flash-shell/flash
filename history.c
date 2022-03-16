@@ -96,6 +96,29 @@ void saveHistory(Node* arr) {
     fclose(historyFile);
 }
 
-void loadHistory(Node* arr) {
+void loadHistory(Node* arr, int *count, int *pos) {
+    char input[256];
+    int id = 0;
+    char command[256];
+    int no_token = 0;
 
+    FILE *historyFile;
+    
+    historyFile = fopen(".history", "r");
+    
+    if (historyFile == NULL) {
+        return;
+    }
+    
+    while (fgets(input, sizeof input, historyFile)) {
+        sscanf(input, "%d %s %d[^\n]", &id, command, &no_token);
+        char *token[512];
+        token[0] = command;
+        printf("%d %s %d\n", id, token[0], no_token);
+        addNode(arr, id, *pos, token, no_token);
+        *count = *count + 1;      
+        *pos = (*pos + 1) % 20;
+    }
+
+    fclose(historyFile);
 }

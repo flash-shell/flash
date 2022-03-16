@@ -40,7 +40,7 @@ void printNodes(Node* arr);
 int getEarliest(Node * arr);
 int checkNumber(char* string);
 void saveHistory(Node* arr);
-void loadHistory(Node* arr);
+void loadHistory(Node* arr, int *count, int *pos);
 
 /*
  * Aliasing functions
