@@ -39,6 +39,8 @@ void addNode(Node* arr,int id, int pos, char** token, int no_commands);
 void printNodes(Node* arr);
 int getEarliest(Node * arr);
 int checkNumber(char* string);
+void saveHistory(Node* arr);
+void loadHistory(Node* arr);
 
 /*
  * Aliasing functions

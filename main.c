@@ -113,6 +113,7 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
         printf("\n");
         setenv("PWD", ORIGINAL_PATH, 1);
         saveAlias();
+        saveHistory(history);
         exit(0);
     }
 

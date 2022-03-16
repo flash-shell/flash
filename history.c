@@ -41,7 +41,6 @@ void addNode(Node* arr, int id, int pos, char **token, int no_token) {
 void printNodes(Node* arr) {
     int count = 0;
     int index = getEarliest(arr);
-
     printf("History:\n\n");
     
     while (arr[index].command != NULL && count < 20) {
@@ -67,6 +66,36 @@ int getEarliest(Node* arr) {
         }
         i++;
     }
-
+    
     return index;
+}
+
+void saveHistory(Node* arr) {
+    FILE *historyFile;
+    //char *historyFilePath = getenv("HOME");   Maybe needed for bug fix idk
+    //strcat(historyFilePath, "/.history");
+    historyFile = fopen(".history", "w");
+
+    if (historyFile == NULL) {
+        return;
+    }
+    
+    int count = 0;
+    int index = getEarliest(arr);
+
+    while (arr[index].command != NULL && count < 20) {
+        fprintf(historyFile, "%d ", arr[index].id);
+        for (int j = 0; j < arr[index].no_token; j++) {
+            fprintf(historyFile, "%s ", arr[index].command[j]);
+        }
+        fprintf(historyFile, "%d\n", arr[index].no_token);
+        count++;
+        index = (index + 1) % 20;
+    }
+
+    fclose(historyFile);
+}
+
+void loadHistory(Node* arr) {
+
 }
