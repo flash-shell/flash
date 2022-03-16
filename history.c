@@ -18,7 +18,8 @@ int get(Node* arr, int id, char** token) {
 
             // alias check
             int tokenCount = arr[i].no_token;
-            swap_token(token, &tokenCount);
+            char *tempNewToken[512];
+            swap_token(token, tempNewToken, &tokenCount);
 
             return 1;
         }
@@ -73,8 +74,8 @@ int getEarliest(Node* arr) {
 void saveHistory(Node* arr) {
     FILE *historyFile;
     //char *historyFilePath = getenv("HOME");   Maybe needed for bug fix idk
-    //strcat(historyFilePath, "/.history");
-    historyFile = fopen(".history", "w");
+    //strcat(historyFilePath, "/.hist_list");
+    historyFile = fopen(".hist_list", "w");
 
     if (historyFile == NULL) {
         return;
@@ -102,7 +103,7 @@ void loadHistory(Node* arr, int *count, int *pos) {
     char command[256];
     FILE *historyFile;
     
-    historyFile = fopen(".history", "r");
+    historyFile = fopen(".hist_list", "r");
     
     if (historyFile == NULL) {
         return;

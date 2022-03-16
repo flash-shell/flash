@@ -71,8 +71,7 @@ void create_alias(char **token, int no_token) {
     }
 }
 
-void swap_token(char **token, int *no_of_tokens) {
-    char *tokenCopy[512];
+void swap_token(char **token, char **tokenCopy, int *no_of_tokens) {
     char *aliasValue;
     struct alias_struct *aliasStruct;
     char commandHolder[512];
