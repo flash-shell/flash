@@ -88,7 +88,7 @@ void saveHistory(Node* arr) {
         for (int j = 0; j < arr[index].no_token; j++) {
             fprintf(historyFile, "%s ", arr[index].command[j]);
         }
-        fprintf(historyFile, "%d\n", arr[index].no_token);
+        fprintf(historyFile, "\n");
         count++;
         index = (index + 1) % 20;
     }
@@ -100,8 +100,6 @@ void loadHistory(Node* arr, int *count, int *pos) {
     char input[256];
     int id = 0;
     char command[256];
-    int no_token = 0;
-
     FILE *historyFile;
     
     historyFile = fopen(".history", "r");
@@ -110,13 +108,20 @@ void loadHistory(Node* arr, int *count, int *pos) {
         return;
     }
     
+    const char delims[] = "\t|><&; ";
     while (fgets(input, sizeof input, historyFile)) {
-        sscanf(input, "%d %s %d[^\n]", &id, command, &no_token);
+        sscanf(input, "%d %[^\n]", &id, command);
+        int tokenCount = 0;
         char *token[512];
-        token[0] = command;
-        printf("%d %s %d\n", id, token[0], no_token);
-        addNode(arr, id, *pos, token, no_token);
-        *count = *count + 1;      
+        token[tokenCount] = strtok(command, delims);
+
+        while (token[tokenCount] != NULL) {
+            tokenCount++;
+            token[tokenCount] = strtok(NULL, delims);
+        }
+
+        addNode(arr, id, *pos, token, tokenCount);
+        *count = *count + 1;
         *pos = (*pos + 1) % 20;
     }
 
