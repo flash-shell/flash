@@ -73,10 +73,11 @@ int getEarliest(Node* arr) {
 
 void saveHistory(Node* arr) {
     FILE *historyFile;
-    //char *historyFilePath = getenv("HOME");   Maybe needed for bug fix idk
-    //strcat(historyFilePath, "/.hist_list");
-    historyFile = fopen(".hist_list", "w");
-
+    char *historyFilePath = getenv("HOME");
+    char historyFilePathCopy[256];
+    strcpy(historyFilePathCopy, historyFilePath);
+    strcat(historyFilePathCopy, "/.hist_list");
+    historyFile = fopen(historyFilePathCopy, "w");
     if (historyFile == NULL) {
         return;
     }

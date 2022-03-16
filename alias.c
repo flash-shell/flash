@@ -308,8 +308,10 @@ void saveAlias() {
     struct alias_struct *a;
     FILE *aliasFile;
     char *aliasFilePath = getenv("HOME");
-    strcat(aliasFilePath, "/.aliases");
-    aliasFile = fopen(aliasFilePath, "w");
+    char aliasFilePathCopy[256];
+    strcpy(aliasFilePathCopy, aliasFilePath);
+    strcat(aliasFilePathCopy, "/.aliases");
+    aliasFile = fopen(aliasFilePathCopy, "w");
 
     if (aliasFile == NULL) {
         return;
