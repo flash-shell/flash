@@ -118,6 +118,7 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
         saveAlias();
         saveHistory(history);
         exit(0);
+
     }
 
     swap_token(token, tempNewToken, tokenCount);
@@ -130,6 +131,9 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
         if (token[i][0] == '!') {
             if (token[i+1] != NULL) {
                 printf("Error. History invocation has too many arguements\n");
+                return;
+            } if (strlen(token[i]) == 1){
+                printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                 return;
             }
 
