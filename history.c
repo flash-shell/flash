@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 int get(Node* arr, int id, char** token) {
     int i = 0;
@@ -103,6 +104,7 @@ void loadHistory(Node* arr, int *count, int *pos) {
     int id = 0;
     char command[256];
     FILE *historyFile;
+    bool check = true;
     
     historyFile = fopen(".hist_list", "r");
     
@@ -122,7 +124,12 @@ void loadHistory(Node* arr, int *count, int *pos) {
             token[tokenCount] = strtok(NULL, delims);
         }
 
-        addNode(arr, id, *pos, token, tokenCount);
+        if (check) {
+            *count = id;
+            check = false;
+        }
+
+        addNode(arr, *count, *pos, token, tokenCount);
         *count = *count + 1;
         *pos = (*pos + 1) % 20;
     }
