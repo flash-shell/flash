@@ -18,7 +18,8 @@ int get(Node* arr, int id, char** token) {
 
             // alias check
             int tokenCount = arr[i].no_token;
-            swap_token(token, &tokenCount);
+            char *tempNewToken[512];
+            swap_token(token, tempNewToken, &tokenCount);
 
             return 1;
         }
@@ -41,7 +42,6 @@ void addNode(Node* arr, int id, int pos, char **token, int no_token) {
 void printNodes(Node* arr) {
     int count = 0;
     int index = getEarliest(arr);
-
     printf("History:\n\n");
     
     while (arr[index].command != NULL && count < 20) {
@@ -67,6 +67,65 @@ int getEarliest(Node* arr) {
         }
         i++;
     }
-
+    
     return index;
+}
+
+void saveHistory(Node* arr) {
+    FILE *historyFile;
+    char *historyFilePath = getenv("HOME");
+    char historyFilePathCopy[256];
+    strcpy(historyFilePathCopy, historyFilePath);
+    strcat(historyFilePathCopy, "/.hist_list");
+    historyFile = fopen(historyFilePathCopy, "w");
+    if (historyFile == NULL) {
+        return;
+    }
+    
+    int count = 0;
+    int index = getEarliest(arr);
+
+    while (arr[index].command != NULL && count < 20) {
+        fprintf(historyFile, "%d ", arr[index].id);
+        for (int j = 0; j < arr[index].no_token; j++) {
+            fprintf(historyFile, "%s ", arr[index].command[j]);
+        }
+        fprintf(historyFile, "\n");
+        count++;
+        index = (index + 1) % 20;
+    }
+
+    fclose(historyFile);
+}
+
+void loadHistory(Node* arr, int *count, int *pos) {
+    char input[256];
+    int id = 0;
+    char command[256];
+    FILE *historyFile;
+    
+    historyFile = fopen(".hist_list", "r");
+    
+    if (historyFile == NULL) {
+        return;
+    }
+    
+    const char delims[] = "\t|><&; ";
+    while (fgets(input, sizeof input, historyFile)) {
+        sscanf(input, "%d %[^\n]", &id, command);
+        int tokenCount = 0;
+        char *token[512];
+        token[tokenCount] = strtok(command, delims);
+
+        while (token[tokenCount] != NULL) {
+            tokenCount++;
+            token[tokenCount] = strtok(NULL, delims);
+        }
+
+        addNode(arr, id, *pos, token, tokenCount);
+        *count = *count + 1;
+        *pos = (*pos + 1) % 20;
+    }
+
+    fclose(historyFile);
 }

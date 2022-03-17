@@ -17,22 +17,25 @@ int main(void) {
     int count = 1;
     int pos = 0;
     Node *history = malloc(sizeof(Node) * 20);
+    loadHistory(history, &count, &pos);
 
     while (true) {
         char *token[512];
+        char *tokenCopy[512];
         int tokenCount = 0;
 
         display_prompt();
-        break_to_command(token, &tokenCount, ORIGINAL_PATH, &count, &pos, history);
+        break_to_command(token, tokenCopy, &tokenCount, ORIGINAL_PATH, &count, &pos, history);
         handle_commands(token, tokenCount, ORIGINAL_PATH, &count, &pos, history);
 
         /**
-         * memset() is used on both 'token' which essentially
-         * frees the memory assigned to the array after commands are handled from
+         * memset() is used on both 'token' and 'tokenCopy' which essentially
+         * frees the memory assigned to the arrays after commands are handled from
          * user input. Without memory being freed, the aliases do not work correctly.
          */ 
 
         memset(&token, 0, sizeof token);
+        memset(&tokenCopy, 0, sizeof token);
         
     }
     return 0;
@@ -76,7 +79,7 @@ void display_prompt() {
     printf(" $ ");
 }
 
-void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, int *count, int *pos, Node* history) {
+void break_to_command(char **token, char **tempNewToken, int *tokenCount, const char *ORIGINAL_PATH, int *count, int *pos, Node* history) {
     char input[512];    
     char *p;
     const char delims[] = "\t|><&; ";
@@ -113,10 +116,11 @@ void break_to_command(char **token, int *tokenCount, const char *ORIGINAL_PATH, 
         printf("\n");
         setenv("PWD", ORIGINAL_PATH, 1);
         saveAlias();
+        saveHistory(history);
         exit(0);
     }
 
-    swap_token(token, tokenCount);
+    swap_token(token, tempNewToken, tokenCount);
 }
 
 void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
