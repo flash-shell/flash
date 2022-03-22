@@ -26,7 +26,7 @@ int main(void) {
 
         display_prompt();
         break_to_command(token, tokenCopy, &tokenCount, ORIGINAL_PATH, &count, &pos, history);
-        handle_commands(token, tokenCount, ORIGINAL_PATH, &count, &pos, history);
+        handle_commands(token, tokenCopy, tokenCount, ORIGINAL_PATH, &count, &pos, history);
 
         /**
          * memset() is used on both 'token' and 'tokenCopy' which essentially
@@ -81,8 +81,6 @@ void display_prompt() {
 
 void break_to_command(char **token, char **tempNewToken, int *tokenCount, const char *ORIGINAL_PATH, int *count, int *pos, Node* history) {
     char input[512];    
-    char *p;
-    const char delims[] = "\t|><&; ";
 
     /*
      *  Initially, fgets reads a line from the stream, with sizeof input used
@@ -92,8 +90,24 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
      */
 
     if(fgets(input, sizeof input, stdin) != NULL) {
-        // If last char in buffer is newline, replace it with end of line to allow for comparisons
-        if ((p = strchr(input, '\n')) != NULL)
+        tokenizing_process(token, tempNewToken, tokenCount, count, pos, history, input);
+    } else {
+        printf("\n");
+        setenv("PWD", ORIGINAL_PATH, 1);
+        saveAlias();
+        saveHistory(history);
+        exit(0);
+
+    }
+
+    swap_token(token, tempNewToken, tokenCount);
+}
+
+void tokenizing_process(char **token, char **tempNewToken, int *tokenCount, int *count, int *pos, Node* history, char *input) {
+    const char delims[] = "\t|><&; ";
+    char *p;
+
+    if ((p = strchr(input, '\n')) != NULL)
             *p = '\0';
 
         token[*tokenCount] = strtok(input, delims);
@@ -112,21 +126,15 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
             *count = *count + 1;      
             *pos = (*pos + 1) % 20;
         }
-    } else {
-        printf("\n");
-        setenv("PWD", ORIGINAL_PATH, 1);
-        saveAlias();
-        saveHistory(history);
-        exit(0);
-
-    }
-
-    swap_token(token, tempNewToken, tokenCount);
 }
 
-void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
+void handle_commands(char **token, char **tempNewToken, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
     // check tokens for commands execvp()won't recognise
 
+    while (alias_exists(token[0])) {
+        swap_token(token, tempNewToken, &no_token);
+    }
+        
     for (int i = 0; i < no_token; i++) {
         if (token[i][0] == '!') {
             if (token[i+1] != NULL) {

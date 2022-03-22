@@ -28,7 +28,8 @@ struct alias_struct {
 
 void display_prompt();
 void break_to_command(char **token, char **tempNewToken, int *tokenCount, const char *ORIGINAL_PATH, int *count, int *pos, Node* history);
-void handle_commands(char **token, int no_commands, const char *ORIGINAL_PATH, int *count, int* pos,  Node* history);
+void tokenizing_process(char **token, char **tempNewToken, int *tokenCount, int *count, int *pos, Node* history, char *input);
+void handle_commands(char **token, char **tempNewToken, int no_commands, const char *ORIGINAL_PATH, int *count, int* pos,  Node* history);
 
 /*
  *  History functions
