@@ -131,8 +131,14 @@ void tokenizing_process(char **token, char **tempNewToken, int *tokenCount, int 
 void handle_commands(char **token, char **tempNewToken, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
     // check tokens for commands execvp()won't recognise
     recheck_aliases(token, tempNewToken, no_token);
+
+    int counter = 0;
         
     for (int i = 0; i < no_token; i++) {
+        if (counter>10) {
+            printf("System error. Infinite history invocations\n");
+            exit(0);
+        }
         if (token[i][0] == '!') {
             if (token[i+1] != NULL) {
                 printf("Error. History invocation has too many arguements\n");
@@ -143,25 +149,33 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
             }
 
             if (strcmp(token[i], "!!") == 0) {
+                printf("bruh\n");
                 if (get(history, *count - 1, token) == 0)
                     return;
+                else i--;
+                // printf("%s\n", token[i]);
             } else if (token[i][1] == '-') {
+                printf("actualy end my life rn please\n");
                 if (check_number(&token[i][2]) == 1) {
                     int id = *count - atoi(&token[i][2]) ;
                     if (get(history, id, token) == 0)
                         return;
+                    else i--;
                 } else {
                     printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                     return;
                 }
             } else if (check_number(&token[i][1]) == 1) {
+                printf("lami\n");
                 int id = atoi(&token[i][1]);
                 if (get(history, id, token) == 0)
                     return;
+                else i--;
             } else {
                 printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                 return;
             }
+            counter ++;
         }
 
         recheck_aliases(token, tempNewToken, no_token);
@@ -261,7 +275,7 @@ void recheck_aliases(char **token, char **tempNewToken, int no_token) {
 
     if (token[0] != NULL) {
         while (alias_exists(token[0])) {
-            if (!(counter > 2 )) {
+            if (!(counter > 10 )) {
                 swap_token(token, tempNewToken, &no_token);
                 counter++;
             } else {

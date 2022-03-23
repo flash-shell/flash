@@ -17,10 +17,11 @@ int get(Node* arr, int id, char** token) {
                 }
             }
 
+            printf("%s\n", token[0]);
             // alias check
             int tokenCount = arr[i].no_token;
             char *tempNewToken[512];
-            swap_token(token, tempNewToken, &tokenCount);
+            recheck_aliases(token, tempNewToken, tokenCount);
 
             return 1;
         }
