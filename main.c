@@ -130,10 +130,17 @@ void tokenizing_process(char **token, char **tempNewToken, int *tokenCount, int 
 
 void handle_commands(char **token, char **tempNewToken, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
     // check tokens for commands execvp()won't recognise
+    int counter = 0;
 
     if (token[0] != NULL) {
         while (alias_exists(token[0])) {
-            swap_token(token, tempNewToken, &no_token);
+            if (!(counter > 9 )) {
+                swap_token(token, tempNewToken, &no_token);
+                counter++;
+            } else {
+                printf("System error. Infinite alias found.\n");
+                exit(0);
+            }
         }
     }
         
