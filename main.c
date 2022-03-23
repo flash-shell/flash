@@ -149,13 +149,11 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
             }
 
             if (strcmp(token[i], "!!") == 0) {
-                printf("bruh\n");
                 if (get(history, *count - 1, token) == 0)
                     return;
                 else i--;
                 // printf("%s\n", token[i]);
             } else if (token[i][1] == '-') {
-                printf("actualy end my life rn please\n");
                 if (check_number(&token[i][2]) == 1) {
                     int id = *count - atoi(&token[i][2]) ;
                     if (get(history, id, token) == 0)
@@ -166,7 +164,6 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
                     return;
                 }
             } else if (check_number(&token[i][1]) == 1) {
-                printf("lami\n");
                 int id = atoi(&token[i][1]);
                 if (get(history, id, token) == 0)
                     return;

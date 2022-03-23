@@ -16,8 +16,6 @@ int get(Node* arr, int id, char** token) {
                     token[j] = arr[i].command[j];
                 }
             }
-
-            printf("%s\n", token[0]);
             // alias check
             int tokenCount = arr[i].no_token;
             char *tempNewToken[512];
