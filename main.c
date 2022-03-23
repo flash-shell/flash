@@ -130,19 +130,7 @@ void tokenizing_process(char **token, char **tempNewToken, int *tokenCount, int 
 
 void handle_commands(char **token, char **tempNewToken, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
     // check tokens for commands execvp()won't recognise
-    int counter = 0;
-
-    if (token[0] != NULL) {
-        while (alias_exists(token[0])) {
-            if (!(counter > 2 )) {
-                swap_token(token, tempNewToken, &no_token);
-                counter++;
-            } else {
-                printf("System error. Infinite alias found.\n");
-                exit(0);
-            }
-        }
-    }
+    recheck_aliases(token, tempNewToken, no_token);
         
     for (int i = 0; i < no_token; i++) {
         if (token[i][0] == '!') {
@@ -176,17 +164,7 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
             }
         }
 
-    if (token[0] != NULL) {
-        while (alias_exists(token[0])) {
-            if (!(counter > 2 )) {
-                swap_token(token, tempNewToken, &no_token);
-                counter++;
-            } else {
-                printf("System error. Infinite alias found.\n");
-                exit(0);
-            }
-        }
-    }
+        recheck_aliases(token, tempNewToken, no_token);
 
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -278,7 +256,23 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
     }
 }
 
-int check_number(char* string){
+void recheck_aliases(char **token, char **tempNewToken, int no_token) {
+    int counter = 0;
+
+    if (token[0] != NULL) {
+        while (alias_exists(token[0])) {
+            if (!(counter > 2 )) {
+                swap_token(token, tempNewToken, &no_token);
+                counter++;
+            } else {
+                printf("System error. Infinite alias found.\n");
+                exit(0);
+            }
+        }
+    }
+}
+
+int check_number(char* string) {
     for (int  i = 0; i < strlen(string); i++) {
         if (string[i] < '0' || string[i] >'9') {
             return 0;
