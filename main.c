@@ -134,7 +134,7 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
 
     if (token[0] != NULL) {
         while (alias_exists(token[0])) {
-            if (!(counter > 9 )) {
+            if (!(counter > 2 )) {
                 swap_token(token, tempNewToken, &no_token);
                 counter++;
             } else {
@@ -158,7 +158,7 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
                 if (get(history, *count - 1, token) == 0)
                     return;
             } else if (token[i][1] == '-') {
-                if (checkNumber(&token[i][2]) == 1) {
+                if (check_number(&token[i][2]) == 1) {
                     int id = *count - atoi(&token[i][2]) ;
                     if (get(history, id, token) == 0)
                         return;
@@ -166,7 +166,7 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
                     printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                     return;
                 }
-            } else if (checkNumber(&token[i][1]) == 1) {
+            } else if (check_number(&token[i][1]) == 1) {
                 int id = atoi(&token[i][1]);
                 if (get(history, id, token) == 0)
                     return;
@@ -175,6 +175,18 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
                 return;
             }
         }
+
+    if (token[0] != NULL) {
+        while (alias_exists(token[0])) {
+            if (!(counter > 2 )) {
+                swap_token(token, tempNewToken, &no_token);
+                counter++;
+            } else {
+                printf("System error. Infinite alias found.\n");
+                exit(0);
+            }
+        }
+    }
 
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -266,7 +278,7 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
     }
 }
 
-int checkNumber(char* string){
+int check_number(char* string){
     for (int  i = 0; i < strlen(string); i++) {
         if (string[i] < '0' || string[i] >'9') {
             return 0;

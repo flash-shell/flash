@@ -39,7 +39,7 @@ int get(Node* arr, int id, char** token);
 void addNode(Node* arr,int id, int pos, char** token, int no_commands);
 void printNodes(Node* arr);
 int getEarliest(Node * arr);
-int checkNumber(char* string);
+int check_number(char* string);
 void saveHistory(Node* arr);
 void loadHistory(Node* arr, int *count, int *pos);
 
