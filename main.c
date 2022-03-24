@@ -193,7 +193,7 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
                 */
                 if (token[i+2] != NULL)
                     printf("Error. \"cd\" requires exactly one argument.\n");
-                else if(access(token[i+1], F_OK) == 0) {
+                else if (access(token[i+1], F_OK) == 0) {
                     chdir(token[i+1]);
                     if (errno != 0)
                         perror(token[i+1]);
@@ -224,13 +224,24 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
         }
 
         if (strcmp(token[i], "getpath") == 0) {
+            if (token[i+1] != NULL) {
+                printf("Error. \"getpath\" does not take arguments.\n");
+                return;
+            }
             printf("%s\n", getenv("PATH"));
             return;
         }
 
         if (strcmp(token[i], "setpath") == 0) {
-            if (token[i+1] != NULL)
+            if (token[i+2] != NULL) {
+                printf("Error. \"setpath\" requires exactly one argument.\n");
+                return;
+            }
+            if (token[i+1] != NULL) {
                 setenv("PATH", token[i+1], 1);
+                return;
+            }
+            printf("Error. \"setpath\" requires an argument.\n");
             return;
         }
 
