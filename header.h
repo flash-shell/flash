@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 /*
- *  Here are the type definitions
+ *  Type definitions
  */
 
 typedef struct NODE {
@@ -11,9 +11,10 @@ typedef struct NODE {
     int no_token;
 }  Node;
 
+struct alias_struct *find_alias(char *alias_val);
+
 #define true 1
 #define false 0
-// typedef int bool;
 
 struct alias_struct {
     char alias[512];
@@ -58,5 +59,3 @@ bool alias_limit_reached();
 void show_aliases();
 void saveAlias();
 void loadAlias();
-
-struct alias_struct *find_alias(char *alias_val);

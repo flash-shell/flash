@@ -16,15 +16,15 @@ int get(Node* arr, int id, char** token) {
                     token[j] = arr[i].command[j];
                 }
             }
-            // alias check
+
             int tokenCount = arr[i].no_token;
             char *tempNewToken[512];
             recheck_aliases(token, tempNewToken, tokenCount);
-
             return 1;
         }
         i++;
     }
+
     printf("Error. ID %d is not found in history\n", id);
     return 0;
 }
@@ -35,6 +35,7 @@ void addNode(Node* arr, int id, int pos, char **token, int no_token) {
         command[i] = malloc(sizeof(char) * strlen(token[i]));
         strcpy(command[i], token[i]);
     }
+    
     Node next = {id, command, no_token};
     arr[pos] = next;
 }
