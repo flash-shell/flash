@@ -191,10 +191,16 @@ void handle_commands(char **token, char **tempNewToken, int no_token, const char
                 * by using F_OK and Access which return 0 if the 
                 * directory exists 
                 */
-                if (access(token[i+1], F_OK) == 0)
+                if (token[i+2] != NULL)
+                    printf("Error. \"cd\" requires exactly one argument.\n");
+                else if(access(token[i+1], F_OK) == 0) {
                     chdir(token[i+1]);
-                else
+                    if (errno != 0)
+                        perror(token[i+1]);
+                } else {
                     perror(token[i+1]);
+                    printf("Please select an existing file or directory.\n");
+                }
             }
             return;
         }
