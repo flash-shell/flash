@@ -26,7 +26,7 @@ int main(void) {
 
         display_prompt();
         break_to_command(token, tokenCopy, &tokenCount, ORIGINAL_PATH, &count, &pos, history);
-        handle_commands(token, tokenCount, ORIGINAL_PATH, &count, &pos, history);
+        handle_commands(token, tokenCopy, tokenCount, ORIGINAL_PATH, &count, &pos, history);
 
         /**
          * memset() is used on both 'token' and 'tokenCopy' which essentially
@@ -56,6 +56,7 @@ void display_prompt() {
      * getlogin_r() has faults on WSL, in which a random set of character is displayed rather than the username,
      * this is due to the nature of the shell, hence if it's not equal to 0 then it's set to "default".
      */
+    
     getlogin_r(USERNAME, 511);
     if (getlogin_r(USERNAME, sizeof(USERNAME)) != 0) {
         strncpy(USERNAME, "default", sizeof(USERNAME));
@@ -81,8 +82,6 @@ void display_prompt() {
 
 void break_to_command(char **token, char **tempNewToken, int *tokenCount, const char *ORIGINAL_PATH, int *count, int *pos, Node* history) {
     char input[512];    
-    char *p;
-    const char delims[] = "\t|><&; ";
 
     /*
      *  Initially, fgets reads a line from the stream, with sizeof input used
@@ -91,9 +90,25 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
      *  <ctrl + d> to crash the shell, as that throws an EOF.
      */
 
-    if(fgets(input, sizeof input, stdin) != NULL) {
-        // If last char in buffer is newline, replace it with end of line to allow for comparisons
-        if ((p = strchr(input, '\n')) != NULL)
+    if (fgets(input, sizeof input, stdin) != NULL) {
+        tokenizing_process(token, tempNewToken, tokenCount, count, pos, history, input);
+    } else {
+        printf("\n");
+        setenv("PWD", ORIGINAL_PATH, 1);
+        saveAlias();
+        saveHistory(history);
+        exit(0);
+
+    }
+
+    swap_token(token, tempNewToken, tokenCount);
+}
+
+void tokenizing_process(char **token, char **tempNewToken, int *tokenCount, int *count, int *pos, Node* history, char *input) {
+    const char delims[] = "\t|><&; ";
+    char *p;
+
+    if ((p = strchr(input, '\n')) != NULL)
             *p = '\0';
 
         token[*tokenCount] = strtok(input, delims);
@@ -112,48 +127,61 @@ void break_to_command(char **token, char **tempNewToken, int *tokenCount, const 
             *count = *count + 1;      
             *pos = (*pos + 1) % 20;
         }
-    } else {
-        printf("\n");
-        setenv("PWD", ORIGINAL_PATH, 1);
-        saveAlias();
-        saveHistory(history);
-        exit(0);
-    }
-
-    swap_token(token, tempNewToken, tokenCount);
 }
 
-void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
+void handle_commands(char **token, char **tempNewToken, int no_token, const char *ORIGINAL_PATH, int *count, int* pos, Node* history) {
     // check tokens for commands execvp()won't recognise
+    recheck_aliases(token, tempNewToken, no_token);
 
+    int counter = 0;
+        
     for (int i = 0; i < no_token; i++) {
+        if (counter>10) {
+            printf("System error. Infinite history invocations\n");
+            exit(0);
+        }
         if (token[i][0] == '!') {
             if (token[i+1] != NULL) {
                 printf("Error. History invocation has too many arguements\n");
                 return;
+            } if (strlen(token[i]) == 1) {
+                printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
+                return;
             }
 
             if (strcmp(token[i], "!!") == 0) {
-                if (get(history, *count - 1, token) == 0)
+                if (get(history, *count - 1, token) == 0) {
                     return;
+                } else {
+                    i--;
+                }
             } else if (token[i][1] == '-') {
-                if (checkNumber(&token[i][2]) == 1) {
+                if (check_number(&token[i][2]) == 1) {
                     int id = *count - atoi(&token[i][2]) ;
-                    if (get(history, id, token) == 0)
+                    if (get(history, id, token) == 0) {
                         return;
+                    } else {
+                        i--;
+                    }
                 } else {
                     printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                     return;
                 }
-            } else if (checkNumber(&token[i][1]) == 1) {
+            } else if (check_number(&token[i][1]) == 1) {
                 int id = atoi(&token[i][1]);
-                if (get(history, id, token) == 0)
+                if (get(history, id, token) == 0) {
                     return;
+                } else {
+                    i--;
+                }
             } else {
                 printf("Error. Invalid history invocation argument. Use !<no> or !-<no> or !!\n");
                 return;
             }
+            counter ++;
         }
+
+        recheck_aliases(token, tempNewToken, no_token);
 
         if (strcmp(token[i], "exit") == 0) {
             setenv("PWD", ORIGINAL_PATH, 1);
@@ -164,15 +192,24 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
            if (token[i+1] == NULL) {
                 chdir(getenv("HOME"));
             } else {
+
                 /*
                 * Here we check to see if the directory exists
                 * by using F_OK and Access which return 0 if the 
                 * directory exists 
                 */
-                if (access(token[i+1], F_OK) == 0)
+               
+                if (token[i+2] != NULL)
+                    printf("Error. \"cd\" requires exactly one argument.\n");
+                else if (access(token[i+1], F_OK) == 0) {
                     chdir(token[i+1]);
-                else
+                    if (errno != 0) {
+                        perror(token[i+1]);
+                    }
+                } else {
                     perror(token[i+1]);
+                    printf("Please select an existing file or directory.\n");
+                }
             }
             return;
         }
@@ -196,13 +233,24 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
         }
 
         if (strcmp(token[i], "getpath") == 0) {
+            if (token[i+1] != NULL) {
+                printf("Error. \"getpath\" does not take arguments.\n");
+                return;
+            }
             printf("%s\n", getenv("PATH"));
             return;
         }
 
         if (strcmp(token[i], "setpath") == 0) {
-            if (token[i+1] != NULL)
+            if (token[i+2] != NULL) {
+                printf("Error. \"setpath\" requires exactly one argument.\n");
+                return;
+            }
+            if (token[i+1] != NULL) {
                 setenv("PATH", token[i+1], 1);
+                return;
+            }
+            printf("Error. \"setpath\" requires an argument.\n");
             return;
         }
 
@@ -239,15 +287,43 @@ void handle_commands(char **token, int no_token, const char *ORIGINAL_PATH, int 
         if (execvp(token[0], token) < 0) {
             perror(token[0]);
         }
-        fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
 
+        fflush(stdout); // Output stream is flushed so terminal can continue displaying statements.
         _exit(EXIT_FAILURE);
     }
 }
 
-int checkNumber(char* string){
-    for (int  i = 0; i < strlen(string); i++) {
-        if (string[i] < '0' || string[i] >'9') {
+/**
+ * This function serves to recheck aliases, with regards to aliasing aliases.
+ * If a token exists (a user input), while there exists an alias with that token (it gets swapped)
+ * then continue to swap it out, and if counter reach > 10 then an infinite alias is found,
+ * as there is a max limit of 10 aliases, then the system exits.
+ */
+
+void recheck_aliases(char **token, char **tempNewToken, int no_token) {
+    int counter = 0;
+
+    if (token[0] != NULL) {
+        while (alias_exists(token[0])) {
+            if (!(counter > 10 )) {
+                swap_token(token, tempNewToken, &no_token);
+                counter++;
+            } else {
+                printf("System error. Infinite alias found.\n");
+                exit(0);
+            }
+        }
+    }
+}
+
+/**
+ * Ensures that the string entered is between 0 and 9, if so,
+ * it returns a 0 else 1.
+ */ 
+
+int check_number(char* string) {
+    for (int i = 0; i < strlen(string); i++) {
+        if (string[i] < '0' || string[i] > '9') {
             return 0;
         }
     }

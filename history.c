@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 int get(Node* arr, int id, char** token) {
     int i = 0;
@@ -16,15 +17,14 @@ int get(Node* arr, int id, char** token) {
                 }
             }
 
-            // alias check
             int tokenCount = arr[i].no_token;
             char *tempNewToken[512];
-            swap_token(token, tempNewToken, &tokenCount);
-
+            recheck_aliases(token, tempNewToken, tokenCount);
             return 1;
         }
         i++;
     }
+
     printf("Error. ID %d is not found in history\n", id);
     return 0;
 }
@@ -35,6 +35,7 @@ void addNode(Node* arr, int id, int pos, char **token, int no_token) {
         command[i] = malloc(sizeof(char) * strlen(token[i]));
         strcpy(command[i], token[i]);
     }
+    
     Node next = {id, command, no_token};
     arr[pos] = next;
 }
@@ -103,6 +104,7 @@ void loadHistory(Node* arr, int *count, int *pos) {
     int id = 0;
     char command[256];
     FILE *historyFile;
+    bool check = true;
     
     historyFile = fopen(".hist_list", "r");
     
@@ -122,7 +124,12 @@ void loadHistory(Node* arr, int *count, int *pos) {
             token[tokenCount] = strtok(NULL, delims);
         }
 
-        addNode(arr, id, *pos, token, tokenCount);
+        if (check) {
+            *count = id;
+            check = false;
+        }
+
+        addNode(arr, *count, *pos, token, tokenCount);
         *count = *count + 1;
         *pos = (*pos + 1) % 20;
     }
