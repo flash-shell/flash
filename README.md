@@ -1,49 +1,30 @@
-# CS210 — SHELL PROJECT
+# ⚡ flash
 
-## Introduction
-Hello, welcome to our Shell repo! You can have a read below to reinforce some basic Git concepts if you're new to Git in general, if you're comfortable then you can omit the instructions. At the very bottom you also have a link to the PDFs necessary for the assingment so you won't have to hop between MyPlace and this repository to find what you need. Adios.
+flash, a shell written in C.
 
-## Conventions
+## Philosophy
+This project was completed as part of a shell project we undertook in our 2nd year of Undergraduate studies. We primairly focused on functionality, but ensured that the shell is minimalistic, yet pleasurable to use and look at. While this project is not in a usable state in comparison to other shells available, it draws inspiration from other shells such as PowerShell & bash, and we are proud of what we have achieved with this project.
 
-We will be adhering to the [kernel](https://www.kernel.org/doc/html/v4.10/process/coding-style.html) conventions with regards to Indendation, Comments, Functions and the likes, to stay consistent + I assume it will be a part of the marking scheme. The two things that we will not follow from the conventions is braces and indentation depth, see below for what we expect:
+## Installation
+1. Clone the git repository.
+2. Compile it wiwth your compiler of choice (gcc was used in the creation of the project).
+3. Lastly run the shell.
 
-```
-void print_numbers() {
-    for (int i = 0; i < 11; i++) {
-        printf(i + "\n");
-    }
-}
-```
+Alternatively, you can follow the steps below:
 
-Basically opening curly brace of a function should be on the same line as the function declaration and the indentation should be one tab character (same length as 4 spaces).
+1. Head over to the official stable [releases](https://github.com/flash-shell/flash/releases) page.
+2. Download the executable for your system, then proceed to run the shell.
 
-## Github + Git
-Given that some of you may be unfamiliar with how Git works, see below commands that you will be using often, starting from now.
+After that, you're ready to use flash.
 
-Since this is of course a group project, we need to ensure that there won't be any issues with the codebase - so we can't just all push to master. We will use branches. It will be a little bit difficult to summarize in a sentence or two, so I recommend watching some kind of tutorial, like this [one](https://www.youtube.com/watch?v=e2IbNHi4uCI) (though there's shorter ones available).
+## Contributing
 
-- "git add ."
+Below are all of the people who contributed to this project!
 
-The most basic command in git, it adds new or changed files in your working directory to the Git staging area, with the dot at the end signifying to add every single item that has been added/changed.
+<a href="https://github.com/flash-shell/flash/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=flash-shell/flash"/>
+</a>
 
-- "git commit -m"
+## License
 
-Another command you will have to use before pushing to the repository. Git commit creates a commit, which is like a snapshot of your repository. The way to use this command is to add a comment after the 'm', such as "git commit -m "this is a commit"".
-
-- "git push -u origin master"
-
-Given that you have initialized your repository and called the remote "master", you can use this command to push your local commits to the repository we can all see.
-
-- "git pull"
-
-This command updates your current local working branch with the changes that have been made by other people.
-
-If you need any help with navigating the git space, feel free to contact Kamil, or Angus, or have a peep [here](https://github.com/git-guides/) which contains all the information you need.
-
-## Additional Information
-
-Click on the hyperlinks below to access whatever resource you may need.
-
-[main shell pdf](https://github.com/AngusLogan02/flash/blob/master/myplace-pdfs/SimpleShell.pdf)\
-[main shell testing pdf](https://github.com/AngusLogan02/flash/blob/master/myplace-pdfs/SimpleShellTests.pdf)\
-[trello](https://trello.com/b/0BASllzp/flash-board)
+Licensed under the MIT License - see the [LICENSE file](https://github.com/flash-shell/flash/blob/master/LICENSE) for more details.
