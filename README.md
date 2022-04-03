@@ -7,7 +7,7 @@ This project was completed as part of a shell project we undertook in our 2nd ye
 
 ## Installation
 1. Clone the git repository.
-2. Compile it with your compiler of choice (gcc was used in the creation of the project).
+2. Compile it with your compiler of choice (gcc 11.2.0 was used in the creation of the project).
 3. Lastly run the shell.
 
 Alternatively, you can follow the steps below:
