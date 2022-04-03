@@ -17,7 +17,7 @@ Alternatively, you can follow the steps below:
 
 Or,
 
-1. Run it with the provided makefile: `make`.
+1. Run it with the provided makefile by running `make`.
 2. And then run the shell via `flash`.
 
 After that, you're ready to use the shell.
