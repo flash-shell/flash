@@ -1,2 +1,2 @@
-flash: flash.c
-	gcc *.c flash flash.c
+flash:
+	gcc *.c -o flash.out
