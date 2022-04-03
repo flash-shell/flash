@@ -17,7 +17,7 @@ Alternatively, you can follow the steps below:
 
 Or,
 
-1. Run it with the provided makefile: `make`
+1. Run it with the provided makefile: `make`.
 2. And then run the shell via `flash`.
 
 After that, you're ready to use the shell.
@@ -25,6 +25,10 @@ After that, you're ready to use the shell.
 ## Contributing
 
 Below are all of the people who contributed to this project!
+
+<a href="https://github.com/flash-shell/flash/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=flash-shell/flash"/>
+</a>
 
 ## License
 
